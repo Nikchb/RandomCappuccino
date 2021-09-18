@@ -1,7 +1,10 @@
-﻿namespace RandomCappuccino.Server.Services.UserManager
+﻿using RandomCappuccino.Server.Services.UserManager.DTOs;
+
+namespace RandomCappuccino.Server.Services.UserManager
 {
-    public class IUserManager
+    public interface IUserManager
     {
+        public ServiceResponse<UserDTO> GetCurrentUser();
 
     }
 }
