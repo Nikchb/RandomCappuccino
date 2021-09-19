@@ -6,7 +6,7 @@ namespace RandomCappuccino.Server.Data
 {
     public static partial class ServiceProviderExtensions
     {
-        public static void AddDatabaseContext(this IServiceCollection services)
+        public static void AddDataBaseContext(this IServiceCollection services)
         {
             var host = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
             var port = Environment.GetEnvironmentVariable("DB_PORT") ?? "5442";

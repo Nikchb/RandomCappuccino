@@ -1,4 +1,5 @@
 ﻿using RandomCappuccino.Server.Services.UserManager.DTOs;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RandomCappuccino.Server.Services.UserManager
@@ -16,6 +17,8 @@ namespace RandomCappuccino.Server.Services.UserManager
         Task<ServiceResponse> DeleteUser(string userId);
 
         Task<ServiceContentResponse<UserDTO>> CheckPassword(string email, string password);
+
+        Task<ServiceContentResponse<IEnumerable<string>>> GetUserRoles(string userId);
 
         Task<ServiceResponse> AddUserRoles(string userId, params string[] roles);     
 

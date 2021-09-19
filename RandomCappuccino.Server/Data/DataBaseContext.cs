@@ -9,6 +9,7 @@ namespace RandomCappuccino.Server.Data
             : base(options)
         {
         }
+
         public DbSet<User> Users { get; set; }       
 
         public DbSet<UserRole> UserRoles {  get; set; }

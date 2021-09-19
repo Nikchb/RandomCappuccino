@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace RandomCappuccino.Server.Data.Models
 {
+    [Index(nameof(Email), IsUnique = true)]
     public class User
     {
         [Key]
