@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace RandomCappuccino.Server.Services.Authentication
+namespace RandomCappuccino.Server.Authentication
 {
     public class TokenManager
     {

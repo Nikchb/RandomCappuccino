@@ -1,37 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace RandomCappuccino.Server.Services
+﻿namespace RandomCappuccino.Server.Services
 {
-    public class ServiceResponse<T>
+    public class ServiceResponse
     {
-        public bool Succeed { get; set; }
+        public bool Succeed { get; }
 
-        public string[] Messages { get; set; }
+        public string[] Messages { get; }
 
-        public T Response { get; set; }
+        public ServiceResponse(bool succeed)
+        {
+            Succeed = succeed;
+        }
 
         public ServiceResponse(params string[] messages)
         {
             Succeed = false;
             Messages = messages;
-        }
-
-        public ServiceResponse(IEnumerable<string> messages)
-        {
-            Succeed = false;
-            Messages = messages.ToArray();
-        }
-
-        public ServiceResponse(T response)
-        {
-            Succeed = true;
-            Response = response;
-        }
-
-        public ServiceResponse(bool succeed)
-        {
-            Succeed = succeed;           
         }
     }
 }

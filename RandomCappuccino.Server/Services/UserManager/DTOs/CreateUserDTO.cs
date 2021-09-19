@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace RandomCappuccino.Server.Services.UserManager.DTOs
 {
@@ -9,10 +10,22 @@ namespace RandomCappuccino.Server.Services.UserManager.DTOs
         public string Email { get; set; }
 
         [Required]
-        public string Name { get; set; }
+        [MinLength(6)]
+        public string Password { get; set; }
 
         [Required]
-        [MinLength(6)]
-        public string Password {  get; set; }     
+        public IEnumerable<string> Roles { get; set; }
+
+        public CreateUserDTO()
+        {
+
+        }
+
+        public CreateUserDTO(string email, string password, params string[] roles)
+        {
+            Email = email;
+            Password = password;
+            Roles = roles;
+        }
     }
 }

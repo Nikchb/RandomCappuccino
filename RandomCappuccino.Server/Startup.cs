@@ -1,11 +1,15 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using RandomCappuccino.Server.Authentication;
+using RandomCappuccino.Server.Data;
+using RandomCappuccino.Server.Mapper;
 using RandomCappuccino.Server.Validation;
 using System;
 using System.Collections.Generic;
@@ -26,6 +30,11 @@ namespace RandomCappuccino.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDatabaseContext();
+
+            services.AddCustomAuthentication();
+
+            services.AddAutoMapper();
 
             services.AddControllers(options => options.Filters.Add(typeof(ValidateModelAttribute)));
             services.AddSwaggerGen(c =>
@@ -46,6 +55,7 @@ namespace RandomCappuccino.Server
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

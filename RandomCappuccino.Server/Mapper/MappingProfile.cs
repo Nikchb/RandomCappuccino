@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using RandomCappuccino.Server.Data.Models;
 using RandomCappuccino.Server.Services.UserManager.DTOs;
+using RandomCappuccino.Server.Services.SignManager.DTOs;
 
 namespace RandomCappuccino.Server.Mapper
 {
-    public class MapperProfile : Profile
+    public class MappingProfile : Profile
     {
-        public MapperProfile()
+        public MappingProfile()
         {
             CreateMap<User, UserDTO>();
             CreateMap<CreateUserDTO, User>();
