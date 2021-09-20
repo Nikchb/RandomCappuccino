@@ -108,17 +108,12 @@ namespace RandomCappuccino.Server.Services.UserManager
             return Accept();
         }
 
-        public Task<ServiceResponse> DeleteUser(string userId)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public async Task<ServiceContentResponse<IEnumerable<string>>> GetUserRoles(string userId)
         {
             IEnumerable<string> roles;
             try
             {
-                roles = await context.UserRoles.Where(v => v.UserId == userId).Select(v => v.Role).ToArrayAsync();
+                roles = await context.UserRoles.Where(v => v.UserId == userId).Select(v => v.Role).ToArrayAsync();                
             }
             catch
             {
@@ -137,7 +132,11 @@ namespace RandomCappuccino.Server.Services.UserManager
 
             try
             {
-                await context.UserRoles.AddRangeAsync(roles.Select(v => new UserRole { Role = v, UserId = user.Id }));
+                var userRoles = await context.UserRoles.Where(v => v.UserId == userId).Select(v => v.Role).ToArrayAsync();
+                await context.UserRoles.AddRangeAsync(
+                    roles.Where(v=>userRoles.Contains(v) == false)
+                         .Select(v => new UserRole { Role = v, UserId = user.Id }));
+                await context.SaveChangesAsync();
             }
             catch
             {
@@ -183,7 +182,7 @@ namespace RandomCappuccino.Server.Services.UserManager
             return Accept(mapper.Map<UserDTO>(user));
         }
 
-        private string HashPassword(string password)
+        public string HashPassword(string password)
         {
             var bytes = Encoding.UTF8.GetBytes(password);
             using (var hash = SHA512.Create())

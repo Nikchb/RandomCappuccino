@@ -14,8 +14,6 @@ namespace RandomCappuccino.Server.Services.UserManager
 
         Task<ServiceResponse> UpdateUserPassword(string userId, UpdateUserPasswordDTO model);
 
-        Task<ServiceResponse> DeleteUser(string userId);
-
         Task<ServiceContentResponse<UserDTO>> CheckPassword(string email, string password);
 
         Task<ServiceContentResponse<IEnumerable<string>>> GetUserRoles(string userId);
