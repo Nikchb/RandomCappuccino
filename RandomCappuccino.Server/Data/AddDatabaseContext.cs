@@ -16,6 +16,7 @@ namespace RandomCappuccino.Server.Data
             var connectionString = $"Host={host};Port={port};Database=RandomCappuccinodb;Username={username};Password={password}";
             
             services.AddDbContext<DataBaseContext>(options => options.UseNpgsql(connectionString));
+            services.BuildServiceProvider().GetService<DataBaseContext>().Database.Migrate();
         }            
     }
 }

@@ -15,6 +15,7 @@ namespace RandomCappuccino.Server.Data.Models
 
         public User User { get; set; }
 
+        [Required]
         public string Name { get; set; }
     }
 }

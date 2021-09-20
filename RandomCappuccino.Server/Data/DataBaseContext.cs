@@ -10,6 +10,12 @@ namespace RandomCappuccino.Server.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserRole>()
+                .HasKey(c => new { c.UserId, c.Role });
+        }
+
         public DbSet<User> Users { get; set; }       
 
         public DbSet<UserRole> UserRoles {  get; set; }
@@ -20,4 +26,6 @@ namespace RandomCappuccino.Server.Data
 
         public DbSet<Participant> Participants {  get; set; }
     }
+
+
 }
