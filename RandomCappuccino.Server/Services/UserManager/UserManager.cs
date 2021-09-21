@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace RandomCappuccino.Server.Services.UserManager
 {
-    public class UserManager : ServiceBase<UserDTO>, IUserManager
+    public class UserManager : ServiceBase, IUserManager
     {
         private readonly DataBaseContext context;
         private readonly IMapper mapper;
@@ -27,7 +27,7 @@ namespace RandomCappuccino.Server.Services.UserManager
         {
             if(context.Users.FirstOrDefault(v=>v.Email == model.Email) != null)
             {
-                return Decline("This email is already used");
+                return Decline<UserDTO>("This email is already used");
             }
 
             model.Password = HashPassword(model.Password);
@@ -42,7 +42,7 @@ namespace RandomCappuccino.Server.Services.UserManager
             }
             catch
             {
-                return Decline("User creation is failed");
+                return Decline<UserDTO>("User creation is failed");
             }
 
             return Accept(mapper.Map<UserDTO>(user));
@@ -53,7 +53,7 @@ namespace RandomCappuccino.Server.Services.UserManager
             var user = await context.Users.FindAsync(userId);            
             if(user == null)
             {
-                return Decline("User is not found");
+                return Decline<UserDTO>("User is not found");
             } 
 
             return Accept(mapper.Map<UserDTO>(user));
@@ -64,7 +64,7 @@ namespace RandomCappuccino.Server.Services.UserManager
             var user = await context.Users.FindAsync(userId);
             if (user == null)
             {
-                return Decline("User is not found");
+                return Decline<UserDTO>("User is not found");
             }
 
             mapper.Map(model, user);
@@ -75,7 +75,7 @@ namespace RandomCappuccino.Server.Services.UserManager
             }
             catch
             {
-                return Decline("User information update is failed");
+                return Decline<UserDTO>("User information update is failed");
             }
 
             return Accept(mapper.Map<UserDTO>(user));
@@ -171,12 +171,12 @@ namespace RandomCappuccino.Server.Services.UserManager
             var user = await context.Users.FirstOrDefaultAsync(v=>v.Email == email);
             if (user == null)
             {
-                return Decline("User is not found");
+                return Decline<UserDTO>("User is not found");
             }
 
             if(user.Password != HashPassword(password))
             {
-                return Decline("Wrong password");
+                return Decline<UserDTO>("Wrong password");
             }
 
             return Accept(mapper.Map<UserDTO>(user));

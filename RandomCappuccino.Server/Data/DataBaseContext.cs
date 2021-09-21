@@ -16,7 +16,9 @@ namespace RandomCappuccino.Server.Data
                 .HasKey(c => new { c.UserId, c.Role });
         }
 
-        public DbSet<User> Users { get; set; }       
+        public DbSet<User> Users { get; set; }
+
+        public DbSet<Group> Groups { get; set; }
 
         public DbSet<UserRole> UserRoles {  get; set; }
 

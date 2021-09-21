@@ -8,18 +8,6 @@ namespace RandomCappuccino.Server.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Tours",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tours", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -33,7 +21,7 @@ namespace RandomCappuccino.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Participants",
+                name: "Groups",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -42,9 +30,9 @@ namespace RandomCappuccino.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Participants", x => x.Id);
+                    table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Participants_Users_UserId",
+                        name: "FK_Groups_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -65,6 +53,45 @@ namespace RandomCappuccino.Server.Migrations
                         name: "FK_UserRoles_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Participants",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    GroupId = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    IsActive = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Participants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Participants_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tours",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    GroupId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tours", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tours_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -102,9 +129,14 @@ namespace RandomCappuccino.Server.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Participants_UserId",
-                table: "Participants",
+                name: "IX_Groups_UserId",
+                table: "Groups",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Participants_GroupId",
+                table: "Participants",
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TourPairs_Participant1Id",
@@ -120,6 +152,11 @@ namespace RandomCappuccino.Server.Migrations
                 name: "IX_TourPairs_TourId",
                 table: "TourPairs",
                 column: "TourId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tours_GroupId",
+                table: "Tours",
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -141,6 +178,9 @@ namespace RandomCappuccino.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "Participants");
+
+            migrationBuilder.DropTable(
+                name: "Groups");
 
             migrationBuilder.DropTable(
                 name: "Users");

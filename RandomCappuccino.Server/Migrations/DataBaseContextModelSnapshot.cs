@@ -19,7 +19,7 @@ namespace RandomCappuccino.Server.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("RandomCappuccino.Server.Data.Models.Participant", b =>
+            modelBuilder.Entity("RandomCappuccino.Server.Data.Models.Group", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -36,6 +36,30 @@ namespace RandomCappuccino.Server.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("RandomCappuccino.Server.Data.Models.Participant", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("GroupId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("IsActive")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
                     b.ToTable("Participants");
                 });
 
@@ -47,7 +71,13 @@ namespace RandomCappuccino.Server.Migrations
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("GroupId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.ToTable("Tours");
                 });
@@ -114,7 +144,7 @@ namespace RandomCappuccino.Server.Migrations
                     b.ToTable("UserRoles");
                 });
 
-            modelBuilder.Entity("RandomCappuccino.Server.Data.Models.Participant", b =>
+            modelBuilder.Entity("RandomCappuccino.Server.Data.Models.Group", b =>
                 {
                     b.HasOne("RandomCappuccino.Server.Data.Models.User", "User")
                         .WithMany()
@@ -123,6 +153,28 @@ namespace RandomCappuccino.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RandomCappuccino.Server.Data.Models.Participant", b =>
+                {
+                    b.HasOne("RandomCappuccino.Server.Data.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
+            modelBuilder.Entity("RandomCappuccino.Server.Data.Models.Tour", b =>
+                {
+                    b.HasOne("RandomCappuccino.Server.Data.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("RandomCappuccino.Server.Data.Models.TourPair", b =>

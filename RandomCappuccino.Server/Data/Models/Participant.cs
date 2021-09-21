@@ -10,12 +10,15 @@ namespace RandomCappuccino.Server.Data.Models
         public string Id {  get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        [ForeignKey("User")]
-        public string UserId { get; set; }
+        [ForeignKey("Group")]
+        public string GroupId { get; set; }
 
-        public User User { get; set; }
+        public Group Group { get; set; }
 
         [Required]
         public string Name { get; set; }
+        
+        [Required]
+        public string IsActive { get; set; }
     }
 }

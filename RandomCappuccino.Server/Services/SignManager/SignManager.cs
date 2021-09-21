@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RandomCappuccino.Server.Services.SignManager
 {
-    public class SignManager : ServiceBase<SignResponseDTO>, ISignManager
+    public class SignManager : ServiceBase, ISignManager
     {
         private readonly DataBaseContext context;
         private readonly IMapper mapper;
@@ -30,7 +30,7 @@ namespace RandomCappuccino.Server.Services.SignManager
             var checkResponse = await userManager.CheckPassword(model.Email, model.Password);
             if(checkResponse.Succeed == false)
             {
-                return Decline(checkResponse.Messages);
+                return Decline<SignResponseDTO>(checkResponse.Messages);
             }
 
             var userInfo = checkResponse.Content;
@@ -38,7 +38,7 @@ namespace RandomCappuccino.Server.Services.SignManager
             var rolesResponse = await userManager.GetUserRoles(userInfo.Id);
             if(rolesResponse.Succeed == false)
             {
-                return Decline(rolesResponse.Messages);
+                return Decline<SignResponseDTO>(rolesResponse.Messages);
             }
 
             var userRoles = rolesResponse.Content;
@@ -66,7 +66,7 @@ namespace RandomCappuccino.Server.Services.SignManager
             var rolesResponse = await userManager.GetUserRoles(userInfo.Id);
             if (rolesResponse.Succeed == false)
             {
-                return Decline(rolesResponse.Messages);
+                return Decline<SignResponseDTO>(rolesResponse.Messages);
             }
 
             var userRoles = rolesResponse.Content;
