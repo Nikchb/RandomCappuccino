@@ -6,12 +6,14 @@ namespace RandomCappuccino.Server.Services.GroupManager
 {
     public interface IGroupManager
     {
-        Task<ServiceContentResponse<GroupDTO>> CreateGroup(string userId, CreateGroupDTO model);
+        Task<ServiceContentResponse<GroupDTO>> CreateGroup(CreateGroupDTO model);
 
-        Task<ServiceContentResponse<GroupDTO>> UpdateGroup(string userId, GroupDTO model);
+        Task<ServiceContentResponse<GroupDTO>> UpdateGroup(GroupDTO model);
 
-        Task<ServiceContentResponse<IEnumerable<GroupDTO>>> GetGroups(string userId);
+        Task<ServiceContentResponse<IEnumerable<GroupDTO>>> GetGroups();
 
-        Task<ServiceResponse> DeleteGroup(string userId, string groupId);        
+        Task<ServiceContentResponse<GroupDTO>> GetGroup(string groupId);
+
+        Task<ServiceResponse> DeleteGroup(string groupId);        
     }
 }

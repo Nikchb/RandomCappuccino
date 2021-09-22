@@ -8,18 +8,20 @@ namespace RandomCappuccino.Server.Services.UserManager
     {
         Task<ServiceContentResponse<UserDTO>> CreateUser(CreateUserDTO model);
 
-        Task<ServiceContentResponse<UserDTO>> GetUserInfo(string userId);
+        Task<ServiceContentResponse<UserDTO>> GetUserInfo();
 
-        Task<ServiceContentResponse<UserDTO>> UpdateUserInfo(string userId, UpdateUserInfoDTO model);
+        Task<ServiceContentResponse<UserDTO>> UpdateUserInfo(UpdateUserInfoDTO model);
 
-        Task<ServiceResponse> UpdateUserPassword(string userId, UpdateUserPasswordDTO model);
+        Task<ServiceResponse> UpdateUserPassword(UpdateUserPasswordDTO model);
 
         Task<ServiceContentResponse<UserDTO>> CheckPassword(string email, string password);
 
+        Task<ServiceContentResponse<IEnumerable<string>>> GetUserRoles();
+
         Task<ServiceContentResponse<IEnumerable<string>>> GetUserRoles(string userId);
 
-        Task<ServiceResponse> AddUserRoles(string userId, params string[] roles);     
+        Task<ServiceResponse> AddUserRoles(params string[] roles);     
 
-        Task<ServiceResponse> RemoveUserRoles(string userId, params string[] roles);
+        Task<ServiceResponse> RemoveUserRoles(params string[] roles);
     }
 }

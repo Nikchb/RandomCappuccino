@@ -48,11 +48,13 @@ namespace RandomCappuccino.Server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("IsActive")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -84,28 +86,20 @@ namespace RandomCappuccino.Server.Migrations
 
             modelBuilder.Entity("RandomCappuccino.Server.Data.Models.TourPair", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("TourId")
                         .HasColumnType("text");
 
                     b.Property<string>("Participant1Id")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Participant2Id")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("TourId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
+                    b.HasKey("TourId", "Participant1Id", "Participant2Id");
 
                     b.HasIndex("Participant1Id");
 
                     b.HasIndex("Participant2Id");
-
-                    b.HasIndex("TourId");
 
                     b.ToTable("TourPairs");
                 });

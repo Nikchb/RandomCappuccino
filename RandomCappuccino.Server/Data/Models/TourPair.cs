@@ -6,9 +6,6 @@ namespace RandomCappuccino.Server.Data.Models
 {
     public class TourPair
     {
-        [Key]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-
         [Required]
         [ForeignKey("Tour")]
         public string TourId { get; set; }

@@ -3,6 +3,7 @@ using RandomCappuccino.Server.Data.Models;
 using RandomCappuccino.Server.Services.UserManager.DTOs;
 using RandomCappuccino.Server.Services.SignManager.DTOs;
 using RandomCappuccino.Server.Services.GroupManager.DTOs;
+using RandomCappuccino.Server.Services.ParticipantManager.DTOs;
 
 namespace RandomCappuccino.Server.Mapper
 {
@@ -16,7 +17,12 @@ namespace RandomCappuccino.Server.Mapper
 
             CreateMap<Group, GroupDTO>();
             CreateMap<GroupDTO, Group>()
-                .ForMember(dest => dest.Id, act => act.Ignore());                
+                .ForMember(dest => dest.Id, act => act.Ignore());
+
+            CreateMap<CreateParticipantDTO, Participant>();
+            CreateMap<Participant, ParticipantDTO>();            
+            CreateMap<ParticipantDTO, Participant>()
+                .ForMember(dest => dest.Id, act => act.Ignore());
         }
     }
 }

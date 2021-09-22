@@ -2,6 +2,8 @@
 using RandomCappuccino.Server.Data.Models;
 using RandomCappuccino.Server.Services.GroupManager;
 using RandomCappuccino.Server.Services.GroupManager.DTOs;
+using RandomCappuccino.Server.Services.IdentityManager;
+using RandomCappuccino.Tests.InterfaceImplementations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,28 +14,36 @@ namespace RandomCappuccino.Tests.Services
 {
     public class GroupManagerTests : TestBase
     {
+        private IIdentityManager identityManager;
+
         private IGroupManager groupManager;
 
         private string userId;
+
+        private string groupId;
 
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
-            groupManager = new GroupManager(mapper, context);
 
             var user = new User { Email = "email@mail.com", Password = "123456" };
+            var group = new Group { Name = "Group 1", UserId = user.Id };                
             context.Users.Add(user);
+            context.Groups.Add(group);
             context.SaveChanges();
-            userId = user.Id;
+
+            groupId = group.Id;
+            identityManager = new TestIdentityManager(user.Id);
+            groupManager = new GroupManager(mapper, context, identityManager);                     
         }
 
         [Test]
         public async Task CreateGroup()
         {
-            var model = new CreateGroupDTO { Name = "Group 1" };
+            var model = new CreateGroupDTO { Name = "Group" };
 
-            var response = await groupManager.CreateGroup(userId, model);
+            var response = await groupManager.CreateGroup(model);
 
             Assert.IsTrue(response.Succeed);
             Assert.AreEqual(model.Name, response.Content.Name);
@@ -42,24 +52,22 @@ namespace RandomCappuccino.Tests.Services
         [Test]
         public async Task CreateGroupWrongUserId()
         {
-            var model = new CreateGroupDTO { Name = "Group 1" };
+            var groupManager = new GroupManager(mapper, context, new TestIdentityManager("id"));
 
-            var response = await groupManager.CreateGroup("id", model);
+            var model = new CreateGroupDTO { Name = "Group" };
+
+            var response = await groupManager.CreateGroup(model);
 
             Assert.IsFalse(response.Succeed);
-            Assert.AreEqual("Group creation is failed", response.Messages.FirstOrDefault());
+            Assert.AreEqual("User is not found", response.Messages.FirstOrDefault());
         }
 
         [Test]
         public async Task UpdateGroup()
         {
-            var group = new Group { Name = "Group 1", UserId = userId };
-            await context.Groups.AddAsync(group);
-            await context.SaveChangesAsync();
+            var model = new GroupDTO { Id = groupId, Name = "Group 2" };
 
-            var model = new GroupDTO { Id = group.Id, Name = "Group 2" };
-
-            var response = await groupManager.UpdateGroup(userId, model);
+            var response = await groupManager.UpdateGroup(model);
 
             Assert.IsTrue(response.Succeed);
             Assert.AreEqual(model.Name, response.Content.Name);
@@ -68,49 +76,22 @@ namespace RandomCappuccino.Tests.Services
         [Test]
         public async Task UpdateGroupWrongGroupId()
         {
-            var group = new Group { Name = "Group 1", UserId = userId };
-            await context.Groups.AddAsync(group);
-            await context.SaveChangesAsync();
-
             var model = new GroupDTO { Id = "id", Name = "Group 2" };
 
-            var response = await groupManager.UpdateGroup(userId, model);
+            var response = await groupManager.UpdateGroup(model);
 
             Assert.IsFalse(response.Succeed);
             Assert.AreEqual("Group is not found", response.Messages.FirstOrDefault());
         }
 
         [Test]
-        public async Task UpdateGroupWrongUserId()
-        {
-            var group = new Group { Name = "Group 1", UserId = userId };
-            await context.Groups.AddAsync(group);
-            await context.SaveChangesAsync();
-
-            var model = new GroupDTO { Id = group.Id, Name = "Group 2" };
-
-            var response = await groupManager.UpdateGroup("id", model);
-
-            Assert.IsFalse(response.Succeed);
-            Assert.AreEqual("User is not found", response.Messages.FirstOrDefault());
-        }
-
-        [Test]
         public async Task UpdateGroupAccessForbiden()
         {
-            var group = new Group { Name = "Group 1", UserId = userId };
-            await context.Groups.AddAsync(group);
+            var groupManager = new GroupManager(mapper, context, new TestIdentityManager("id"));
 
-            var user = new User { Email = "email1@mail.com", Password = "123456" };
-            await context.Users.AddAsync(user);           
-            
-            await context.SaveChangesAsync();
+            var model = new GroupDTO { Id = groupId, Name = "Group 2" };
 
-
-
-            var model = new GroupDTO { Id = group.Id, Name = "Group 2" };
-
-            var response = await groupManager.UpdateGroup(user.Id, model);
+            var response = await groupManager.UpdateGroup(model);
 
             Assert.IsFalse(response.Succeed);
             Assert.AreEqual("Access is forbiden", response.Messages.FirstOrDefault());
@@ -118,54 +99,56 @@ namespace RandomCappuccino.Tests.Services
 
         [Test]
         public async Task DeleteGroup()
-        {
-            var group = new Group { Name = "Group 1", UserId = userId };
-            await context.Groups.AddAsync(group);
-            await context.SaveChangesAsync();            
-
-            var response = await groupManager.DeleteGroup(userId, group.Id);
+        {           
+            var response = await groupManager.DeleteGroup(groupId);
 
             Assert.IsTrue(response.Succeed);            
         }
 
         [Test]
-        public async Task DeleteeGroupWrongGroupId()
+        public async Task DeleteGroupWrongGroupId()
         {
-            var group = new Group { Name = "Group 1", UserId = userId };
-            await context.Groups.AddAsync(group);
-            await context.SaveChangesAsync();
-
-            var response = await groupManager.DeleteGroup(userId, "id");
+            var response = await groupManager.DeleteGroup("id");
 
             Assert.IsFalse(response.Succeed);
             Assert.AreEqual("Group is not found", response.Messages.FirstOrDefault());
         }
 
         [Test]
-        public async Task DeleteGroupWrongUserId()
+        public async Task DeleteGroupAccessForbiden()
         {
-            var group = new Group { Name = "Group 1", UserId = userId };
-            await context.Groups.AddAsync(group);
-            await context.SaveChangesAsync();
+            var groupManager = new GroupManager(mapper, context, new TestIdentityManager("id"));
 
-            var response = await groupManager.DeleteGroup("id", group.Id);
+            var response = await groupManager.DeleteGroup(groupId);
 
             Assert.IsFalse(response.Succeed);
-            Assert.AreEqual("User is not found", response.Messages.FirstOrDefault());
+            Assert.AreEqual("Access is forbiden", response.Messages.FirstOrDefault());
         }
 
         [Test]
-        public async Task DeleteGroupAccessForbiden()
+        public async Task GetGroup()
         {
-            var group = new Group { Name = "Group 1", UserId = userId };
-            await context.Groups.AddAsync(group);
+            var response = await groupManager.GetGroup(groupId);
 
-            var user = new User { Email = "email1@mail.com", Password = "123456" };
-            await context.Users.AddAsync(user);
+            Assert.IsTrue(response.Succeed);
+            Assert.AreEqual(groupId, response.Content.Id);
+        }
 
-            await context.SaveChangesAsync();           
+        [Test]
+        public async Task GetGroupWrongGroupId()
+        {
+            var response = await groupManager.GetGroup("id");
 
-            var response = await groupManager.DeleteGroup(user.Id, group.Id);
+            Assert.IsFalse(response.Succeed);
+            Assert.AreEqual("Group is not found", response.Messages.FirstOrDefault());
+        }
+
+        [Test]
+        public async Task GetGroupAccessForbiden()
+        {
+            var groupManager = new GroupManager(mapper, context, new TestIdentityManager("id"));
+
+            var response = await groupManager.GetGroup(groupId);
 
             Assert.IsFalse(response.Succeed);
             Assert.AreEqual("Access is forbiden", response.Messages.FirstOrDefault());

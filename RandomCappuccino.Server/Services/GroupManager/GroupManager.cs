@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RandomCappuccino.Server.Data;
 using RandomCappuccino.Server.Data.Models;
 using RandomCappuccino.Server.Services.GroupManager.DTOs;
+using RandomCappuccino.Server.Services.IdentityManager;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,16 +14,24 @@ namespace RandomCappuccino.Server.Services.GroupManager
     {
         private readonly IMapper mapper;
         private readonly DataBaseContext context;
+        private readonly IIdentityManager identityManager;
 
-        public GroupManager(IMapper mapper, DataBaseContext context)
+        public GroupManager(IMapper mapper, DataBaseContext context, IIdentityManager identityManager)
         {
             this.mapper = mapper;
             this.context = context;
+            this.identityManager = identityManager;
         }
 
-        public async Task<ServiceContentResponse<GroupDTO>> CreateGroup(string userId, CreateGroupDTO model)
+        public async Task<ServiceContentResponse<GroupDTO>> CreateGroup(CreateGroupDTO model)
         {
-            var group = new Group { Name = model.Name, UserId = userId };
+            var user = await context.Users.FindAsync(identityManager.UserId);
+            if (user == null)
+            {
+                return Decline<GroupDTO>("User is not found");
+            }
+
+            var group = new Group { Name = model.Name, UserId = identityManager.UserId };
             try
             {
                 await context.Groups.AddAsync(group);
@@ -35,21 +44,15 @@ namespace RandomCappuccino.Server.Services.GroupManager
             return Accept(mapper.Map<GroupDTO>(group));
         }
 
-        public async Task<ServiceResponse> DeleteGroup(string userId, string groupId)
+        public async Task<ServiceResponse> DeleteGroup(string groupId)
         {
-            var user = await context.Users.FindAsync(userId);
-            if (user == null)
-            {
-                return Decline<GroupDTO>("User is not found");
-            }
-
             var group = await context.Groups.FindAsync(groupId);
             if (group == null)
             {
                 return Decline<GroupDTO>("Group is not found");
             }
 
-            if (group.UserId != userId)
+            if (group.UserId != identityManager.UserId)
             {
                 return Decline<GroupDTO>("Access is forbiden");
             }
@@ -75,12 +78,13 @@ namespace RandomCappuccino.Server.Services.GroupManager
             return Accept(mapper.Map<GroupDTO>(group));
         }
 
-        public async Task<ServiceContentResponse<IEnumerable<GroupDTO>>> GetGroups(string userId)
+        public async Task<ServiceContentResponse<IEnumerable<GroupDTO>>> GetGroups()
         {
             IEnumerable<GroupDTO> groups;
             try
             {
-                groups = await context.Groups.Where(v => v.UserId == userId).Select(v => mapper.Map<GroupDTO>(v)).ToArrayAsync();
+                groups = await context.Groups.Where(v => v.UserId == identityManager.UserId)
+                                             .Select(v => mapper.Map<GroupDTO>(v)).ToArrayAsync();
             }
             catch
             {
@@ -89,21 +93,31 @@ namespace RandomCappuccino.Server.Services.GroupManager
             return Accept(groups);
         }
 
-        public async Task<ServiceContentResponse<GroupDTO>> UpdateGroup(string userId, GroupDTO model)
+        public async Task<ServiceContentResponse<GroupDTO>> GetGroup(string groupId)
         {
-            var user = await context.Users.FindAsync(userId);
-            if (user == null)
+            var group = await context.Groups.FindAsync(groupId);
+            if (group == null)
             {
-                return Decline<GroupDTO>("User is not found");
+                return Decline<GroupDTO>("Group is not found");
             }
 
+            if (group.UserId != identityManager.UserId)
+            {
+                return Decline<GroupDTO>("Access is forbiden");
+            }
+
+            return Accept(mapper.Map<GroupDTO>(group));
+        }
+
+        public async Task<ServiceContentResponse<GroupDTO>> UpdateGroup(GroupDTO model)
+        {
             var group = await context.Groups.FindAsync(model.Id);
             if (group == null)
             {
                 return Decline<GroupDTO>("Group is not found");
             }
 
-            if(group.UserId != userId)
+            if(group.UserId != identityManager.UserId)
             {
                 return Decline<GroupDTO>("Access is forbiden");
             }

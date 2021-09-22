@@ -63,8 +63,9 @@ namespace RandomCappuccino.Server.Migrations
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     GroupId = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    IsActive = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    PName = table.Column<string>(type: "text", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,14 +101,13 @@ namespace RandomCappuccino.Server.Migrations
                 name: "TourPairs",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
                     TourId = table.Column<string>(type: "text", nullable: false),
                     Participant1Id = table.Column<string>(type: "text", nullable: false),
                     Participant2Id = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TourPairs", x => x.Id);
+                    table.PrimaryKey("PK_TourPairs", x => new { x.TourId, x.Participant1Id, x.Participant2Id });
                     table.ForeignKey(
                         name: "FK_TourPairs_Participants_Participant1Id",
                         column: x => x.Participant1Id,
@@ -147,11 +147,6 @@ namespace RandomCappuccino.Server.Migrations
                 name: "IX_TourPairs_Participant2Id",
                 table: "TourPairs",
                 column: "Participant2Id");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TourPairs_TourId",
-                table: "TourPairs",
-                column: "TourId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tours_GroupId",

@@ -14,11 +14,17 @@ namespace RandomCappuccino.Server.Data.Models
         public string GroupId { get; set; }
 
         public Group Group { get; set; }
+        
+        public string Name
+        {
+            get => IsActive ? PName : "Diactivated participant";
+            set => PName = value;
+        }
 
         [Required]
-        public string Name { get; set; }
-        
+        public string PName { get; set; }
+
         [Required]
-        public string IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }
