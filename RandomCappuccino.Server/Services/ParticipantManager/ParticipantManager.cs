@@ -54,7 +54,7 @@ namespace RandomCappuccino.Server.Services.ParticipantManager
             var participant = await context.Participants.FindAsync(participantId);
             if (participant == null ? true : participant.IsActive == false)
             {
-                Decline("Participant is not found");
+                return Decline("Participant is not found");
             }
 
             var groupResponse = await groupManager.GetGroup(participant.GroupId);
@@ -97,12 +97,12 @@ namespace RandomCappuccino.Server.Services.ParticipantManager
             }
         }
 
-        public async Task<ServiceContentResponse<ParticipantDTO>> GetParticipant(string partiicpantId)
+        public async Task<ServiceContentResponse<ParticipantDTO>> GetParticipant(string participantId)
         {
-            var participant = await context.Participants.FindAsync(partiicpantId);
+            var participant = await context.Participants.FindAsync(participantId);
             if (participant == null ? true : participant.IsActive == false)
             {
-                Decline<ParticipantDTO>("Participant is not found");
+                return Decline<ParticipantDTO>("Participant is not found");
             }
 
             var groupResponse = await groupManager.GetGroup(participant.GroupId);
@@ -119,7 +119,7 @@ namespace RandomCappuccino.Server.Services.ParticipantManager
             var participant = await context.Participants.FindAsync(model.Id);
             if (participant == null ? true : participant.IsActive == false)
             {
-                Decline("Participant is not found");
+                return Decline("Participant is not found");
             }
 
             var groupResponse = await groupManager.GetGroup(participant.GroupId);
