@@ -15,15 +15,13 @@ namespace RandomCappuccino.Server.Services.ParticipantManager
     {
         private readonly IMapper mapper;
         private readonly DataBaseContext context;
-        private readonly IGroupManager groupManager;
-        private readonly IIdentityManager identityManager;
+        private readonly IGroupManager groupManager;        
 
-        public ParticipantManager(IMapper mapper, DataBaseContext context, IGroupManager groupManager, IIdentityManager identityManager)
+        public ParticipantManager(IMapper mapper, DataBaseContext context, IGroupManager groupManager)
         {
             this.mapper = mapper;
             this.context = context;
-            this.groupManager = groupManager;
-            this.identityManager = identityManager;
+            this.groupManager = groupManager;            
         }
 
         public async Task<ServiceContentResponse<ParticipantDTO>> CreateParticipant(CreateParticipantDTO model)

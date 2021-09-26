@@ -40,7 +40,7 @@ namespace RandomCappuccino.Tests.Services
             participantId = participant.Id;
             identityManager = new TestIdentityManager(user.Id);
             var groupManager = new GroupManager(mapper, context, identityManager);
-            participantManager = new ParticipantManager(mapper, context, groupManager, identityManager);
+            participantManager = new ParticipantManager(mapper, context, groupManager);
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace RandomCappuccino.Tests.Services
         {
             var identityManager = new TestIdentityManager("id");
             var groupManager = new GroupManager(mapper, context, identityManager);
-            var participantManager = new ParticipantManager(mapper, context, groupManager, identityManager);
+            var participantManager = new ParticipantManager(mapper, context, groupManager);
 
             var model = new CreateParticipantDTO { GroupId = groupId, Name = "Participant" };
 
@@ -95,7 +95,7 @@ namespace RandomCappuccino.Tests.Services
         {
             var identityManager = new TestIdentityManager("id");
             var groupManager = new GroupManager(mapper, context, identityManager);
-            var participantManager = new ParticipantManager(mapper, context, groupManager, identityManager);
+            var participantManager = new ParticipantManager(mapper, context, groupManager);
 
             var model = new ParticipantDTO { Id = participantId, Name = "Participant 2" };
 
@@ -127,7 +127,7 @@ namespace RandomCappuccino.Tests.Services
         {
             var identityManager = new TestIdentityManager("id");
             var groupManager = new GroupManager(mapper, context, identityManager);
-            var participantManager = new ParticipantManager(mapper, context, groupManager, identityManager);            
+            var participantManager = new ParticipantManager(mapper, context, groupManager);            
 
             var response = await participantManager.DeleteParticipant(participantId);
 
@@ -158,7 +158,7 @@ namespace RandomCappuccino.Tests.Services
         {
             var identityManager = new TestIdentityManager("id");
             var groupManager = new GroupManager(mapper, context, identityManager);
-            var participantManager = new ParticipantManager(mapper, context, groupManager, identityManager);
+            var participantManager = new ParticipantManager(mapper, context, groupManager);
 
             var response = await participantManager.GetParticipant(participantId);
 
@@ -189,7 +189,7 @@ namespace RandomCappuccino.Tests.Services
         {
             var identityManager = new TestIdentityManager("id");
             var groupManager = new GroupManager(mapper, context, identityManager);
-            var participantManager = new ParticipantManager(mapper, context, groupManager, identityManager);
+            var participantManager = new ParticipantManager(mapper, context, groupManager);
 
             var response = await participantManager.GetGroupParticipants(groupId);
 

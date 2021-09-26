@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,5 +18,7 @@ namespace RandomCappuccino.Server.Data.Models
         public string GroupId { get; set; }
 
         public Group Group { get; set; }
+
+        public List<TourPair> Pairs {  get; set; }
     }
 }
