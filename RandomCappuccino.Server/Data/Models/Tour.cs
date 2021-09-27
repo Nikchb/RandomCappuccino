@@ -17,8 +17,8 @@ namespace RandomCappuccino.Server.Data.Models
         [ForeignKey("Group")]
         public string GroupId { get; set; }
 
-        public Group Group { get; set; }
-
-        public List<TourPair> Pairs {  get; set; }
+        public Group Group { get; set; }   
+        
+        public List<TourPair> Pairs { get; set; }
     }
 }

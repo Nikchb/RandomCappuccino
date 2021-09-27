@@ -59,15 +59,6 @@ namespace RandomCappuccino.Server.Services.GroupManager
 
             try
             {
-                var participants = await context.Participants.Where(v => v.GroupId == group.Id).ToArrayAsync();
-                var tours = await context.Tours.Where(v => v.GroupId == group.Id).ToArrayAsync();
-                foreach(var tour in tours)
-                {
-                    var pairs = await context.TourPairs.Where(v => v.TourId == tour.Id).ToArrayAsync();
-                    context.RemoveRange(pairs);
-                }
-                context.Tours.RemoveRange(tours);
-                context.Participants.RemoveRange(participants);
                 context.Groups.RemoveRange(group);
                 await context.SaveChangesAsync();
             }

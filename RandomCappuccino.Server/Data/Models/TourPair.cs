@@ -9,7 +9,7 @@ namespace RandomCappuccino.Server.Data.Models
         [Required]
         [ForeignKey("Tour")]
         public string TourId { get; set; }
-        public Participant Tour { get; set; }
+        public Tour Tour { get; set; }
 
         [Required]
         [ForeignKey("Participant1")]

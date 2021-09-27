@@ -121,9 +121,9 @@ namespace RandomCappuccino.Server.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TourPairs_Participants_TourId",
+                        name: "FK_TourPairs_Tours_TourId",
                         column: x => x.TourId,
-                        principalTable: "Participants",
+                        principalTable: "Tours",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -166,13 +166,13 @@ namespace RandomCappuccino.Server.Migrations
                 name: "TourPairs");
 
             migrationBuilder.DropTable(
-                name: "Tours");
-
-            migrationBuilder.DropTable(
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Participants");
+
+            migrationBuilder.DropTable(
+                name: "Tours");
 
             migrationBuilder.DropTable(
                 name: "Groups");

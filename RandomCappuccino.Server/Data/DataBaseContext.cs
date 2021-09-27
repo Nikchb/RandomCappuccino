@@ -14,6 +14,7 @@ namespace RandomCappuccino.Server.Data
         {
             modelBuilder.Entity<UserRole>()
                 .HasKey(c => new { c.UserId, c.Role });
+
             modelBuilder.Entity<TourPair>()
                 .HasKey(c => new { c.TourId, c.Participant1Id, c.Participant2Id });
         }

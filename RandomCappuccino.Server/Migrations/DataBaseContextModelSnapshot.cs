@@ -185,8 +185,8 @@ namespace RandomCappuccino.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RandomCappuccino.Server.Data.Models.Participant", "Tour")
-                        .WithMany()
+                    b.HasOne("RandomCappuccino.Server.Data.Models.Tour", "Tour")
+                        .WithMany("Pairs")
                         .HasForeignKey("TourId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -207,6 +207,11 @@ namespace RandomCappuccino.Server.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RandomCappuccino.Server.Data.Models.Tour", b =>
+                {
+                    b.Navigation("Pairs");
                 });
 #pragma warning restore 612, 618
         }

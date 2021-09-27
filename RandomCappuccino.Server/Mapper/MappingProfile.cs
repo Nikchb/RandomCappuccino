@@ -28,7 +28,10 @@ namespace RandomCappuccino.Server.Mapper
 
             CreateMap<CreateTourDTO, Tour>();
             CreateMap<Tour, TourDTO>();
-            CreateMap<TourPair, TourPairDTO>();
+            CreateMap<Tour, ExtendedTourDTO>();
+            CreateMap<TourPair, TourPairDTO>()
+                .ForMember(dest => dest.Participant1, act => act.MapFrom(v => v.Participant1.Name))
+                .ForMember(dest => dest.Participant2, act => act.MapFrom(v => v.Participant2.Name));
             CreateMap<TourPair, Pair>()
                 .ForMember(dest => dest.Participant1, act => act.MapFrom(v => v.Participant1Id))
                 .ForMember(dest => dest.Participant2, act => act.MapFrom(v => v.Participant2Id));

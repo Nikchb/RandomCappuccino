@@ -16,9 +16,7 @@ namespace RandomCappuccino.Tests.Services
     {
         private IIdentityManager identityManager;
 
-        private IGroupManager groupManager;
-
-        private string userId;
+        private IGroupManager groupManager;        
 
         private string groupId;
 

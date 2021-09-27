@@ -6,6 +6,7 @@ using RandomCappuccino.Server.Services.GroupManager;
 using RandomCappuccino.Server.Services.ParticipantManager;
 using RandomCappuccino.Server.Services.ParticipantManager.DTOs;
 using RandomCappuccino.Server.Services.TourManager.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,29 +17,22 @@ namespace RandomCappuccino.Server.Services.TourManager
     {
         private readonly DataBaseContext context;
         private readonly IMapper mapper;
-        private readonly IGroupManager groupManager;
-        private readonly IParticipantManager participantManager;
+        private readonly IGroupManager groupManager;        
 
-        private ParticipantDTO[] groupParticipants;
+        private Participant[] groupParticipants;
         private HashSet<Pair> allPairs;
 
-        public TourManager(DataBaseContext context, IMapper mapper, IGroupManager groupManager, IParticipantManager participantManager)
+        public TourManager(DataBaseContext context, IMapper mapper, IGroupManager groupManager)
         {
             this.context = context;
             this.mapper = mapper;
             this.groupManager = groupManager;
-            this.participantManager = participantManager;
         }
+            
 
-        private async Task<ServiceResponse> ComputeAllPairs(string groupId)
+        private ServiceResponse ComputeAllPairs(string groupId)
         {
-            var response = await participantManager.GetGroupParticipants(groupId);
-            if(response.Succeed == false)
-            {
-                return Decline<IEnumerable<Pair>>(response.Messages);
-            }
-
-            groupParticipants = response.Content.ToArray();     
+            groupParticipants = context.Participants.Where(v => v.GroupId == groupId && v.IsActive).AsEnumerable().OrderBy(v => Guid.NewGuid()).ToArray();
             allPairs = new HashSet<Pair>();
 
             for(int i=0; i< groupParticipants.Length - 1; i++)
@@ -47,8 +41,7 @@ namespace RandomCappuccino.Server.Services.TourManager
                 {
                     allPairs.Add(new Pair { Participant1 = groupParticipants[i].Id, Participant2 = groupParticipants[j].Id });
                 }
-            }
-
+            }            
             return Accept();
         }
 
@@ -60,15 +53,15 @@ namespace RandomCappuccino.Server.Services.TourManager
             if (groupResponse.Succeed == false)
             {
                 return Decline<ExtendedTourDTO>(groupResponse.Messages);
-            }            
-            
+            }
+
             var tours = await context.Tours.Where(v => v.GroupId == model.GroupId)
                                             .OrderByDescending(v => v.CreationTime)
                                             .Take(toursNumber)
-                                            .Include(v => v.Pairs)
+                                            .Include(v=>v.Pairs)
                                             .ToListAsync();
 
-            var allPairsRequest = await ComputeAllPairs(model.GroupId);
+            var allPairsRequest = ComputeAllPairs(model.GroupId);
             if (allPairsRequest.Succeed == false)
             {
                 return Decline<ExtendedTourDTO>(allPairsRequest.Messages);
@@ -78,16 +71,16 @@ namespace RandomCappuccino.Server.Services.TourManager
 
             do
             {
-                var usedPairs = new HashSet<Pair>();
-                foreach(var tour in tours)
+                var usedPairs = new HashSet<Pair>();               
+                foreach (var tour in tours)
                 {
-                    foreach(var pair in tour.Pairs.Select(v=>mapper.Map<Pair>(v)))
+                    foreach (var pair in tour.Pairs.Select(v => mapper.Map<Pair>(v)))
                     {
-                        usedPairs.Add(pair);
+                        usedPairs.Add(pair);                       
                     }
                 }
 
-                var freePairs = allPairs.Where(v => usedPairs.Contains(v) == false).ToArray();
+                var freePairs = allPairs.Where(v => usedPairs.Any(vv=>vv.Equals(v)) == false).ToArray();
 
                 pairs = new List<Pair>();
                 for (int i = 0; i < freePairs.Length; i++)
@@ -102,10 +95,10 @@ namespace RandomCappuccino.Server.Services.TourManager
                 {
                     tours.Remove(tours.Last());
                 }
-            } 
+            }
             while (pairs.Count < groupParticipants.Length / 2);
 
-            if(groupParticipants.Length % 2 != 0)
+            if (groupParticipants.Length % 2 != 0)
             {
                 var usedParticipants = new List<string>();
                 usedParticipants.AddRange(pairs.Select(v => v.Participant1));
@@ -118,26 +111,25 @@ namespace RandomCappuccino.Server.Services.TourManager
 
             try
             {
-                var createdTour = new Tour { GroupId = model.GroupId };                
+                var createdTour = new Tour { GroupId = model.GroupId };
                 var createdTourPairs = pairs.Select(v => new TourPair { TourId = createdTour.Id, Participant1Id = v.Participant1, Participant2Id = v.Participant2 });
                 await context.AddAsync(createdTour);
                 await context.AddRangeAsync(createdTourPairs);
                 await context.SaveChangesAsync();
 
-                var tourDTO = new ExtendedTourDTO
+                var response = await GetTour(createdTour.Id);
+                if(response.Succeed == false)
                 {
-                    Id = createdTour.Id,
-                    CreationTime = createdTour.CreationTime,
-                    Pairs = createdTourPairs.Select(v => mapper.Map<TourPairDTO>(v)).ToArray()
-                };
+                    return Decline<ExtendedTourDTO>(response.Messages);
+                }
 
-                return Accept(tourDTO);
+                return Accept(response.Content);
             }
             catch
             {
                 return Decline<ExtendedTourDTO>("Tour creation failed");
-            }                
-        }       
+            }
+        }
 
 
         public async Task<ServiceResponse> DeleteTour(string tourId)
@@ -148,7 +140,7 @@ namespace RandomCappuccino.Server.Services.TourManager
                 return Decline("Tour is not found");
             }
 
-            var groupResponse = await groupManager.GetGroup(tour.Id);
+            var groupResponse = await groupManager.GetGroup(tour.GroupId);
             if(groupResponse.Succeed == false)
             {
                 return Decline(groupResponse.Messages);
@@ -156,8 +148,6 @@ namespace RandomCappuccino.Server.Services.TourManager
 
             try
             {
-                var tourPairs = await context.TourPairs.Where(v => v.TourId == tour.Id).ToArrayAsync();
-                context.RemoveRange(tourPairs);
                 context.Remove(tour);
                 await context.SaveChangesAsync();
             }
@@ -191,26 +181,23 @@ namespace RandomCappuccino.Server.Services.TourManager
 
         public async Task<ServiceContentResponse<ExtendedTourDTO>> GetTour(string tourId)
         {
-            var tour = await context.Tours.FindAsync(tourId);
+            var tour = await context.Tours.Include(v=>v.Pairs)
+                                          .ThenInclude(v=>v.Participant1)
+                                          .Include(v=>v.Pairs)
+                                          .ThenInclude(v=>v.Participant2)
+                                          .FirstOrDefaultAsync(v=>v.Id == tourId);
             if (tour == null)
             {
                 return Decline<ExtendedTourDTO>("Tour is not found");
             }
 
-            var groupResponse = await groupManager.GetGroup(tour.Id);
+            var groupResponse = await groupManager.GetGroup(tour.GroupId);
             if (groupResponse.Succeed == false)
             {
                 return Decline<ExtendedTourDTO>(groupResponse.Messages);
-            }
+            }            
 
-            var tourDTO = new ExtendedTourDTO
-            {
-                Id = tour.Id,
-                CreationTime = tour.CreationTime,
-                Pairs = await context.TourPairs.Where(v => v.TourId == tour.Id).Select(v => mapper.Map<TourPairDTO>(v)).ToArrayAsync()
-            };
-
-            return Accept(tourDTO);
+            return Accept(mapper.Map<ExtendedTourDTO>(tour));
         }
     }
 }
