@@ -48,10 +48,15 @@ namespace RandomCappuccino.Server
         {
             if (env.IsDevelopment())
             {
+                app.UseWebAssemblyDebugging();
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RandomCappuccino.Server v1"));
             }
+
+            app.UseBlazorFrameworkFiles();
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -61,6 +66,7 @@ namespace RandomCappuccino.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToFile("index.html");
             });
         }
     }
