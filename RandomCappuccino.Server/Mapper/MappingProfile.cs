@@ -6,6 +6,7 @@ using RandomCappuccino.Server.Services.GroupManager.DTOs;
 using RandomCappuccino.Server.Services.ParticipantManager.DTOs;
 using RandomCappuccino.Server.Services.TourManager.DTOs;
 using RandomCappuccino.Server.Services.TourManager;
+using RandomCappuccino.Shared;
 
 namespace RandomCappuccino.Server.Mapper
 {
@@ -13,6 +14,8 @@ namespace RandomCappuccino.Server.Mapper
     {
         public MappingProfile()
         {
+            CreateMap<SignRequest, SignRequestDTO>();            
+            
             CreateMap<User, UserDTO>();
             CreateMap<CreateUserDTO, User>();
             CreateMap<UpdateUserInfoDTO, User>();

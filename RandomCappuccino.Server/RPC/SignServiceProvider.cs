@@ -33,13 +33,14 @@ namespace RandomCappuccino.Server.RPC
 
         public override async Task<SignResponse> SignUp(SignRequest request, ServerCallContext context)
         {
-            var managerResponse = await signManager.SignUp(mapper.Map<SignRequestDTO>(request));
+            var model = mapper.Map<SignRequestDTO>(request);
+            var managerResponse = await signManager.SignUp(model);
 
             var response = new SignResponse();
 
             response.Succeed = managerResponse.Succeed;
             response.Messages.AddRange(managerResponse.Messages);
-            response.Token = managerResponse.Content?.Token;
+            response.Token = managerResponse.Content?.Token ?? "";
 
             return response;
         }

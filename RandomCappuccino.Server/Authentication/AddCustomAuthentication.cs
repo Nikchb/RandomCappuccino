@@ -10,7 +10,7 @@ namespace RandomCappuccino.Server.Authentication
         public static void AddCustomAuthentication(this IServiceCollection services)
         {           
             var tokenManager = new TokenManager(
-                issuerSigningKey: Environment.GetEnvironmentVariable("AUTH_KEY") ?? "DefaultKey",
+                issuerSigningKey: Environment.GetEnvironmentVariable("AUTH_KEY") ?? "DefaultKeyDefaultKeyDefaultKey",
                 validIssuer: Environment.GetEnvironmentVariable("AUTH_ISSUER") ?? "DefaultIssuer",
                 validAudience: Environment.GetEnvironmentVariable("AUTH_AUDIENCE") ?? "DefaultAudience",
                 clockSkewMinutes: int.Parse(Environment.GetEnvironmentVariable("AUTH_MINUTES") ?? "4320"));

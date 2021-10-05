@@ -41,6 +41,7 @@ namespace RandomCappuccino.Server
 
             services.AddAutoMapper();
 
+            services.AddHttpContextAccessor();
             services.AddScoped<IIdentityManager, IdentityManager>();
             services.AddScoped<ISignManager, SignManager>();
             services.AddScoped<IUserManager, UserManager>();
@@ -49,11 +50,6 @@ namespace RandomCappuccino.Server
             services.AddScoped<ITourManager, TourManager>();     
 
             services.AddGrpc();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RandomCappuccino.Server", Version = "v1" });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,9 +58,7 @@ namespace RandomCappuccino.Server
             if (env.IsDevelopment())
             {
                 app.UseWebAssemblyDebugging();
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RandomCappuccino.Server v1"));
+                app.UseDeveloperExceptionPage();               
             }
 
             app.UseBlazorFrameworkFiles();
@@ -74,7 +68,8 @@ namespace RandomCappuccino.Server
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseAuthorization();
+
+            app.UseGrpcWeb();
 
             app.UseEndpoints(endpoints =>
             {

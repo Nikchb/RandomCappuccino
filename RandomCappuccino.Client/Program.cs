@@ -7,6 +7,8 @@ using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
 using Microsoft.AspNetCore.Components;
 using RandomCappuccino.Shared;
+using Blazored.LocalStorage;
+using RandomCappuccino.Client.Services;
 
 namespace RandomCappuccino.Client
 {
@@ -17,12 +19,26 @@ namespace RandomCappuccino.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddSingleton(new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())));
-            
+            builder.Services.AddBlazoredLocalStorage();
 
-            builder.Services.AddSingleton(services =>
-            {                             
-                var channel = GrpcChannel.ForAddress(builder.HostEnvironment.BaseAddress, new GrpcChannelOptions { HttpClient = services.GetRequiredService<HttpClient>() });
+            builder.Services.AddScoped(services =>
+            {
+                var httpClient = new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler()));
+                httpClient.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress);
+                return httpClient;
+            });
+
+            builder.Services.AddScoped(services =>
+            {
+                return new AuthenticationService(
+                    services.GetRequiredService<ISyncLocalStorageService>(),
+                    services.GetRequiredService<HttpClient>());
+            });
+            
+            builder.Services.AddScoped(services =>
+            {
+                var httpClient = services.GetRequiredService<HttpClient>();
+                var channel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient });
                 return new SignService.SignServiceClient(channel);
             });
 

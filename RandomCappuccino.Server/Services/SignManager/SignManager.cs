@@ -45,9 +45,15 @@ namespace RandomCappuccino.Server.Services.SignManager
 
             var userRoles = rolesResponse.Content;
 
-            var token = tokenManager.GenerateToken(userInfo.Id, userRoles);
-
-            return Accept(new SignResponseDTO { Token = token });
+            try
+            {
+                var token = tokenManager.GenerateToken(userInfo.Id, userRoles);
+                return Accept(new SignResponseDTO { Token = token });
+            }
+            catch
+            {
+                return Decline<SignResponseDTO>("Token generation failed");
+            }            
         }
 
         public async Task<ServiceContentResponse<SignResponseDTO>> SignUp(SignRequestDTO model)
@@ -66,7 +72,7 @@ namespace RandomCappuccino.Server.Services.SignManager
                     ));
             if(response.Succeed == false)
             {
-                Decline(response.Messages);
+                return Decline<SignResponseDTO>(response.Messages);
             }
 
             var userInfo = response.Content;
@@ -79,9 +85,15 @@ namespace RandomCappuccino.Server.Services.SignManager
 
             var userRoles = rolesResponse.Content;
 
-            var token = tokenManager.GenerateToken(userInfo.Id, userRoles);            
-
-            return Accept(new SignResponseDTO { Token = token });
+            try
+            {
+                var token = tokenManager.GenerateToken(userInfo.Id, userRoles);
+                return Accept(new SignResponseDTO { Token = token });
+            }
+            catch
+            {
+                return Decline<SignResponseDTO>("Token generation failed");
+            }                              
         }
     }
 }

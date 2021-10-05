@@ -7,9 +7,9 @@ namespace RandomCappuccino.Server.Services.IdentityManager
     {
         public string UserId { get; private set; }
 
-        public IdentityManager(HttpContextAccessor contextAccessor)
+        public IdentityManager(IHttpContextAccessor contextAccessor)
         {
-            UserId = contextAccessor.HttpContext.User.Claims.FirstOrDefault(v => v.Type == "UserId").Value;
+            UserId = contextAccessor.HttpContext.User.Claims.FirstOrDefault(v => v.Type == "UserId")?.Value;
         }
     }
 }

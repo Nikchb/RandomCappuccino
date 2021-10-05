@@ -1,10 +1,12 @@
-﻿namespace RandomCappuccino.Server.Services
+﻿using System;
+
+namespace RandomCappuccino.Server.Services
 {
     public class ServiceResponse
     {
-        public bool Succeed { get; }
+        public bool Succeed { get; } 
 
-        public string[] Messages { get; }
+        public string[] Messages { get; } = Array.Empty<string>();
 
         public ServiceResponse(bool succeed)
         {
