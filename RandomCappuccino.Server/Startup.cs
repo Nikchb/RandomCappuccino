@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +9,13 @@ using Microsoft.OpenApi.Models;
 using RandomCappuccino.Server.Authentication;
 using RandomCappuccino.Server.Data;
 using RandomCappuccino.Server.Mapper;
-using RandomCappuccino.Server.Validation;
+using RandomCappuccino.Server.RPC;
+using RandomCappuccino.Server.Services.GroupManager;
+using RandomCappuccino.Server.Services.IdentityManager;
+using RandomCappuccino.Server.Services.ParticipantManager;
+using RandomCappuccino.Server.Services.SignManager;
+using RandomCappuccino.Server.Services.TourManager;
+using RandomCappuccino.Server.Services.UserManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +41,15 @@ namespace RandomCappuccino.Server
 
             services.AddAutoMapper();
 
-            services.AddControllers(options => options.Filters.Add(typeof(ValidateModelAttribute)));
+            services.AddScoped<IIdentityManager, IdentityManager>();
+            services.AddScoped<ISignManager, SignManager>();
+            services.AddScoped<IUserManager, UserManager>();
+            services.AddScoped<IParticipantManager, ParticipantManager>();
+            services.AddScoped<IGroupManager, GroupManager>();
+            services.AddScoped<ITourManager, TourManager>();     
+
+            services.AddGrpc();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "RandomCappuccino.Server", Version = "v1" });
@@ -65,7 +78,7 @@ namespace RandomCappuccino.Server
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapGrpcService<SignServiceProvider>().EnableGrpcWeb();
                 endpoints.MapFallbackToFile("index.html");
             });
         }

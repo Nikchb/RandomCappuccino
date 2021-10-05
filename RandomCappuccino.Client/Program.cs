@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+using Grpc.Net.Client;
+using Grpc.Net.Client.Web;
+using Microsoft.AspNetCore.Components;
+using RandomCappuccino.Shared;
 
 namespace RandomCappuccino.Client
 {
@@ -17,7 +17,14 @@ namespace RandomCappuccino.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddSingleton(new HttpClient(new GrpcWebHandler(GrpcWebMode.GrpcWeb, new HttpClientHandler())));
+            
+
+            builder.Services.AddSingleton(services =>
+            {                             
+                var channel = GrpcChannel.ForAddress(builder.HostEnvironment.BaseAddress, new GrpcChannelOptions { HttpClient = services.GetRequiredService<HttpClient>() });
+                return new SignService.SignServiceClient(channel);
+            });
 
             await builder.Build().RunAsync();
         }

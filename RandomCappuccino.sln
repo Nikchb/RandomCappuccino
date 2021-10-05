@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomCappuccino.Server", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomCappuccino.Tests", "RandomCappuccino.Tests\RandomCappuccino.Tests.csproj", "{F6CCCB05-D80E-4CBA-AC15-9A4B84C64E51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomCappuccino.Client", "RandomCappuccino.Client\RandomCappuccino.Client.csproj", "{CB9600DD-2E42-45E1-8B99-F8D2A4E71FDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RandomCappuccino.Client", "RandomCappuccino.Client\RandomCappuccino.Client.csproj", "{CB9600DD-2E42-45E1-8B99-F8D2A4E71FDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomCappuccino.Shared", "RandomCappuccino.Shared\RandomCappuccino.Shared.csproj", "{8D8DBC6C-3B74-4657-8EEB-BFEF1405FF3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{CB9600DD-2E42-45E1-8B99-F8D2A4E71FDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB9600DD-2E42-45E1-8B99-F8D2A4E71FDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB9600DD-2E42-45E1-8B99-F8D2A4E71FDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D8DBC6C-3B74-4657-8EEB-BFEF1405FF3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D8DBC6C-3B74-4657-8EEB-BFEF1405FF3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D8DBC6C-3B74-4657-8EEB-BFEF1405FF3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D8DBC6C-3B74-4657-8EEB-BFEF1405FF3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

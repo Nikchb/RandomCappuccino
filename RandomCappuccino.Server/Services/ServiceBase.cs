@@ -1,9 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace RandomCappuccino.Server.Services
 {
     public class ServiceBase
     {
+        protected ServiceResponse ValidateModel(object model)
+        {
+            var context = new ValidationContext(model);
+            var validationResults = new List<ValidationResult>();
+
+            if(Validator.TryValidateObject(model, context, validationResults, true))
+            {
+                return Accept();
+            }
+            return Decline(validationResults.Select(v => v.ErrorMessage).ToArray());
+
+        }
+
         public ServiceResponse Accept()
         {
             return new ServiceResponse(true);

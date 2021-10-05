@@ -12,21 +12,23 @@ namespace RandomCappuccino.Server.Services.SignManager
 {
     public class SignManager : ServiceBase, ISignManager
     {
-        private readonly DataBaseContext context;
-        private readonly IMapper mapper;
         private readonly TokenManager tokenManager;
         private readonly IUserManager userManager;
         
-        public SignManager(DataBaseContext context, IMapper mapper, TokenManager tokenManager, IUserManager userManager)
+        public SignManager(TokenManager tokenManager, IUserManager userManager)
         {
-            this.context = context;
-            this.mapper = mapper;
             this.tokenManager = tokenManager;
             this.userManager = userManager;
         }
 
         public async Task<ServiceContentResponse<SignResponseDTO>> SignIn(SignRequestDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if(validationResponce.Succeed == false)
+            {
+                return Decline<SignResponseDTO>(validationResponce.Messages);
+            }
+
             var checkResponse = await userManager.CheckPassword(model.Email, model.Password);
             if(checkResponse.Succeed == false)
             {
@@ -50,6 +52,12 @@ namespace RandomCappuccino.Server.Services.SignManager
 
         public async Task<ServiceContentResponse<SignResponseDTO>> SignUp(SignRequestDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline<SignResponseDTO>(validationResponce.Messages);
+            }
+
             var response = await userManager.CreateUser(
                 new CreateUserDTO(
                     email: model.Email,
