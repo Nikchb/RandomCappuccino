@@ -42,6 +42,13 @@ namespace RandomCappuccino.Client
                 return new SignService.SignServiceClient(channel);
             });
 
+            builder.Services.AddScoped(services =>
+            {
+                var httpClient = services.GetRequiredService<HttpClient>();
+                var channel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient });
+                return new UserService.UserServiceClient(channel);
+            });
+
             await builder.Build().RunAsync();
         }
     }

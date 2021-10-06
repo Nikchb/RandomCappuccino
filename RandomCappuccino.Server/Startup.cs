@@ -73,6 +73,7 @@ namespace RandomCappuccino.Server
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapGrpcService<UserServiceProvider>().EnableGrpcWeb();
                 endpoints.MapGrpcService<SignServiceProvider>().EnableGrpcWeb();
                 endpoints.MapFallbackToFile("index.html");
             });

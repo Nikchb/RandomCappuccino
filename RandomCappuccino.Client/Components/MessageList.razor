@@ -1,0 +1,27 @@
+﻿
+@if(Messages != null)
+{
+<ul class="list-group">
+    @foreach(var message in Messages)
+    {
+         @if(message.Type == ViewMessageType.Success)
+         {
+                <li class="list-group-item list-group-item-success">@message.Message</li>
+         }
+         @if(message.Type == ViewMessageType.Message)
+         {
+                <li class="list-group-item list-group-item-light">@message.Message</li>
+         }
+         @if(message.Type == ViewMessageType.Error)
+         {
+                <li class="list-group-item list-group-item-danger">@message.Message</li>
+         }
+     }
+</ul>
+}
+
+@code 
+{
+    [Parameter]
+    public List<ViewMessage> Messages { get; set; }
+}

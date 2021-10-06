@@ -1,7 +1,7 @@
 ﻿syntax = "proto3"; 
 // replace namespace with your own
 option csharp_namespace = "RandomCappuccino.Shared"; 
-package WeatherForecast; 
+package SignService; 
 
 service SignService { 
 	rpc SignIn (SignRequest) returns (SignResponse); 

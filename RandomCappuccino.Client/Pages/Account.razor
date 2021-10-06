@@ -1,0 +1,44 @@
+﻿@page "/account"
+@inherits BasePage
+
+<h3>Account</h3>
+
+<MessageList Messages=messages  />
+
+<br />
+<h4>Account information</h4>
+<hr />
+<div class="row">    
+    <div class="col-lg-4">
+        <div class=form-group>
+            <lable>Email</lable>
+            <input class="form-control" @bind=Email />
+        </div>
+        <button class="form-control" @onclick=UpdateUserInfo>Update information</button>
+    </div>    
+</div>
+
+<br />
+<h4>Change password</h4>
+<hr />
+<div class="row">
+    <div class="col-lg-4">
+        <div class=form-group>
+            <lable>Current password</lable>
+            <input class="form-control" @bind=CurrentPassword />
+        </div>
+        <div class=form-group>
+            <lable>New password</lable>
+            <input class="form-control" @bind=NewPassword />
+        </div>
+        <button class="form-control" @onclick=UpdateUserPassword>Change password</button>
+    </div>    
+</div>
+
+<br />
+<hr />
+<div class="row">
+    <div class="col-lg-4">
+        <button class="form-control" @onclick=ResetChanges>Reset changes</button>
+    </div>    
+</div>

@@ -14,7 +14,11 @@ namespace RandomCappuccino.Server.Mapper
     {
         public MappingProfile()
         {
-            CreateMap<SignRequest, SignRequestDTO>();            
+            CreateMap<SignRequest, SignRequestDTO>();
+
+            CreateMap<UserDTO, UserInfo>();
+            CreateMap<UpdateUserInfoRequest, UpdateUserInfoDTO>();
+            CreateMap<UpdateUserPasswordRequest, UpdateUserPasswordDTO>();
             
             CreateMap<User, UserDTO>();
             CreateMap<CreateUserDTO, User>();

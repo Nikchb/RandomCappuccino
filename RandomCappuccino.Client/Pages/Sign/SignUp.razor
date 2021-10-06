@@ -1,9 +1,12 @@
 ﻿@page "/sign-up"
+@inherits BasePage
 
 <h3>Sign Up</h3>
 
+<MessageList Messages=messages  />
+
 <div class="row">
-    <div class=col-6>
+    <div class="col-lg-4">
         <div class="form-group">
             <label>Email</label>
             <input class="form-control" @bind="Email" />
@@ -12,6 +15,6 @@
             <label>Password</label>
             <input class="form-control" @bind="Password" />
         </div>
-        <button @onclick="SignUpAsync">Sign Up</button>
+        <button class="form-control" @onclick="SignUpAsync">Sign Up</button>
     </div>
 </div>

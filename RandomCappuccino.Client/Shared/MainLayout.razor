@@ -7,9 +7,16 @@
 
     <div class="main">
         <div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-        </div>
-
+            @if(AuthenticationService.IsAuthenticated == false)
+            {
+                <NavLink class="nav-link" href="/sign-in">Sign In</NavLink>
+                <NavLink class="nav-link" href="/sign-up">Sign Up</NavLink>
+            }
+            else
+            {
+                <button class="nav-link" @onclick=SignOut >Sign Out</button>
+            }            
+        </div>        
         <div class="content px-4">
             @Body
         </div>

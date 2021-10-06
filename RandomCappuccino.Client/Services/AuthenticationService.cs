@@ -19,16 +19,14 @@ namespace RandomCappuccino.Client.Services
 
         private void InitializeAuthenticationStatus()
         {
+            IsAuthenticated = false;
+            httpClient.DefaultRequestHeaders.Remove("Authorization");
+            
             var token = localStorage.GetItemAsString("token");
             if (token != null)
             {
                 IsAuthenticated = true;
                 httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-            }
-            else
-            {
-                IsAuthenticated = false;
-                httpClient.DefaultRequestHeaders.Remove("Authorization");
             }
         }
 

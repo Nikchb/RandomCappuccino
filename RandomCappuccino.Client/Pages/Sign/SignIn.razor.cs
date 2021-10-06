@@ -9,21 +9,20 @@ namespace RandomCappuccino.Client.Pages.Sign
     public partial class SignIn
     {
         [Inject]
-        public AuthenticationService authenticationService { get; set; }
-
-        [Inject]
         public SignServiceClient SignService { get; set; }
 
         private string Email { get; set; } = "";
         private string Password { get; set; } = "";
-        
+
         private async Task SignInAsync()
-        {
+        {          
             var responce = await SignService.SignInAsync(new SignRequest { Email = Email, Password = Password });
             if (responce.Succeed)
             {
-                authenticationService.SetToken(responce.Token);
+                AuthenticationService.SetToken(responce.Token);
+                NavigationManager.NavigateTo("/");
             }
+            UpdateErrorMessages(responce.Messages);
         }
     }
 }

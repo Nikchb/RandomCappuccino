@@ -26,7 +26,13 @@ namespace RandomCappuccino.Server.Services.UserManager
 
         public async Task<ServiceContentResponse<UserDTO>> CreateUser(CreateUserDTO model)
         {
-            if(context.Users.FirstOrDefault(v=>v.Email == model.Email) != null)
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline<UserDTO>(validationResponce.Messages);
+            }
+
+            if (context.Users.FirstOrDefault(v=>v.Email == model.Email) != null)
             {
                 return Decline<UserDTO>("This email is already used");
             }
@@ -62,6 +68,12 @@ namespace RandomCappuccino.Server.Services.UserManager
 
         public async Task<ServiceContentResponse<UserDTO>> UpdateUserInfo(UpdateUserInfoDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline<UserDTO>(validationResponce.Messages);
+            }
+
             var user = await context.Users.FindAsync(identityManager.UserId);
             if (user == null)
             {
@@ -84,6 +96,12 @@ namespace RandomCappuccino.Server.Services.UserManager
 
         public async Task<ServiceResponse> UpdateUserPassword(UpdateUserPasswordDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline(validationResponce.Messages);
+            }
+
             var user = await context.Users.FindAsync(identityManager.UserId);
             if (user == null)
             {
