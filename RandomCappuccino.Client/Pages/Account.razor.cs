@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Grpc.Core;
+using Microsoft.AspNetCore.Components;
 using RandomCappuccino.Shared;
 using System.Threading.Tasks;
 using static RandomCappuccino.Shared.UserService;
@@ -22,14 +23,22 @@ namespace RandomCappuccino.Client.Pages
         protected async override Task OnParametersSetAsync()
         {
             await base.OnParametersSetAsync();
-            var response = await UserService.GetUserInfoAsync(new UserInfoRequest());
 
-            if (response.Succeed)
+            try
             {
-                User = response.UserInfo;
-                ResetChanges();
+                var response = await UserService.GetUserInfoAsync(new UserInfoRequest());
+                if (response.Succeed)
+                {
+                    User = response.UserInfo;
+                    ResetChanges();
+                }
+                UpdateErrorMessages(response.Messages);
             }
-            UpdateErrorMessages(response.Messages);
+            catch (RpcException ex) 
+            {
+                HandleRPCExection(ex);
+            }
+            
         }
 
         private void ResetChanges()
@@ -41,7 +50,7 @@ namespace RandomCappuccino.Client.Pages
 
         private async Task UpdateUserInfo()
         {
-            var response = await UserService.UpdateUserInfoAsync(new UpdateUserInfoRequest { Email = Email });
+            var response = await UserService.UpdateUserInfoAsync(new UpdateUserInfoRequest { Email = Email });           
 
             if (response.Succeed)
             {

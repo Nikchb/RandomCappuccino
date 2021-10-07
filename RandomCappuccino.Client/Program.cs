@@ -34,19 +34,21 @@ namespace RandomCappuccino.Client
                     services.GetRequiredService<ISyncLocalStorageService>(),
                     services.GetRequiredService<HttpClient>());
             });
-            
-            builder.Services.AddScoped(services =>
-            {
-                var httpClient = services.GetRequiredService<HttpClient>();
-                var channel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient });
-                return new SignService.SignServiceClient(channel);
-            });
 
             builder.Services.AddScoped(services =>
             {
                 var httpClient = services.GetRequiredService<HttpClient>();
-                var channel = GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient });
-                return new UserService.UserServiceClient(channel);
+                return GrpcChannel.ForAddress(httpClient.BaseAddress, new GrpcChannelOptions { HttpClient = httpClient });
+            });
+            
+            builder.Services.AddScoped(services =>
+            {                
+                return new SignService.SignServiceClient(services.GetRequiredService<GrpcChannel>());
+            });
+
+            builder.Services.AddScoped(services =>
+            {
+                return new UserService.UserServiceClient(services.GetRequiredService<GrpcChannel>());
             });
 
             await builder.Build().RunAsync();

@@ -43,10 +43,5 @@ namespace RandomCappuccino.Client.Services
             localStorage.RemoveItem("token");
             InitializeAuthenticationStatus();
         }
-
-        public void StopAuthenticationStatus()
-        {
-            IsAuthenticated = false;
-        }
     }
 }

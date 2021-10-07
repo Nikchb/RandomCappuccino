@@ -1,6 +1,11 @@
 using AutoMapper;
+using Grpc.AspNetCore.Server;
+using Grpc.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using RandomCappuccino.Server.Authentication;
 using RandomCappuccino.Server.Data;
 using RandomCappuccino.Server.Mapper;
+using RandomCappuccino.Server.Middlewares.RPCAuthenticationHandler;
 using RandomCappuccino.Server.RPC;
 using RandomCappuccino.Server.Services.GroupManager;
 using RandomCappuccino.Server.Services.IdentityManager;
@@ -37,6 +43,7 @@ namespace RandomCappuccino.Server
         {
             services.AddDataBaseContext();
 
+            services.AddAuthorization();
             services.AddCustomAuthentication();
 
             services.AddAutoMapper();
@@ -47,8 +54,10 @@ namespace RandomCappuccino.Server
             services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IParticipantManager, ParticipantManager>();
             services.AddScoped<IGroupManager, GroupManager>();
-            services.AddScoped<ITourManager, TourManager>();     
+            services.AddScoped<ITourManager, TourManager>();
 
+            services.AddScoped<RPCAuthenticationHandlerMiddleware>();
+            
             services.AddGrpc();
         }
 
@@ -61,18 +70,21 @@ namespace RandomCappuccino.Server
                 app.UseDeveloperExceptionPage();               
             }
 
-            app.UseBlazorFrameworkFiles();
-
             app.UseStaticFiles();
+
+            app.UseBlazorFrameworkFiles();            
 
             app.UseRouting();
 
+            app.UseMiddleware<RPCAuthenticationHandlerMiddleware>();
+
             app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseGrpcWeb();
 
             app.UseEndpoints(endpoints =>
-            {
+            {                
                 endpoints.MapGrpcService<UserServiceProvider>().EnableGrpcWeb();
                 endpoints.MapGrpcService<SignServiceProvider>().EnableGrpcWeb();
                 endpoints.MapFallbackToFile("index.html");

@@ -26,8 +26,10 @@ namespace RandomCappuccino.Server.RPC
 
             response.Succeed = managerResponse.Succeed;
             response.Messages.AddRange(managerResponse.Messages);
-            response.Token = managerResponse.Content?.Token;
-
+            if(managerResponse.Content != null)
+            {
+                response.Token = managerResponse.Content.Token;
+            }           
             return response;            
         }
 
@@ -40,7 +42,10 @@ namespace RandomCappuccino.Server.RPC
 
             response.Succeed = managerResponse.Succeed;
             response.Messages.AddRange(managerResponse.Messages);
-            response.Token = managerResponse.Content?.Token ?? "";
+            if (managerResponse.Content != null)
+            {
+                response.Token = managerResponse.Content.Token;
+            }
 
             return response;
         }

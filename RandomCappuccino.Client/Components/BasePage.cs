@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Grpc.Core;
+using Microsoft.AspNetCore.Components;
 using RandomCappuccino.Client.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,20 @@ namespace RandomCappuccino.Client.Components
         {
             this.messages.Clear();
             AddSuccessMessages(messages);
+        }
+
+        protected void HandleRPCExection(RpcException ex)
+        {
+            if(ex.StatusCode == StatusCode.Unauthenticated)
+            {
+                AuthenticationService.RemoveToken();
+                NavigationManager.NavigateTo("/sign-in");
+            }
+            if (ex.StatusCode == StatusCode.PermissionDenied)
+            {
+                UpdateErrorMessages("Permission denied");
+            }
+
         }
     }    
 }

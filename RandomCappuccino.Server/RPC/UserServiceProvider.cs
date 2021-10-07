@@ -6,9 +6,10 @@ using AutoMapper;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 
+
 namespace RandomCappuccino.Server.RPC
 {
-    
+    [Authorize]
     public class UserServiceProvider : UserService.UserServiceBase
     {
         private readonly IUserManager userManager;
