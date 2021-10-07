@@ -10,7 +10,7 @@ namespace RandomCappuccino.Client.Shared
         public AuthenticationService AuthenticationService { get; set; }
 
         [Inject]
-        public NavigationManager NavigationManager { get; set; }
+        public NavigationManager NavigationManager { get; set; }        
 
         private void SignOut()
         {

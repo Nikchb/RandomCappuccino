@@ -1,5 +1,7 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">RandomCappuccino.Client</a>
+﻿@inject AuthenticationService authenticationService
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Random Cappuccino</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,11 +14,19 @@
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </li>
-                <li class="nav-item px-3">
-            <NavLink class="nav-link" href="/account" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Account
-            </NavLink>
-        </li>
+        @if (authenticationService.IsAuthenticated)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/account" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Account
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/groups" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Groups
+                </NavLink>
+            </li>
+        }
     </ul>
 </div>
 
@@ -28,5 +38,10 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    public void Update()
+    {
+        StateHasChanged();
     }
 }

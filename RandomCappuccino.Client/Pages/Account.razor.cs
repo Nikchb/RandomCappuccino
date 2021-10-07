@@ -26,11 +26,11 @@ namespace RandomCappuccino.Client.Pages
 
             try
             {
-                var response = await UserService.GetUserInfoAsync(new UserInfoRequest());
+                var response = await UserService.GetUserInfoAsync(new UserInfoRequest());                
                 if (response.Succeed)
                 {
                     User = response.UserInfo;
-                    ResetChanges();
+                    ResetChanges();                    
                 }
                 UpdateErrorMessages(response.Messages);
             }
@@ -50,25 +50,43 @@ namespace RandomCappuccino.Client.Pages
 
         private async Task UpdateUserInfo()
         {
-            var response = await UserService.UpdateUserInfoAsync(new UpdateUserInfoRequest { Email = Email });           
-
-            if (response.Succeed)
+            try
             {
-                User = response.UserInfo;
-                ResetChanges();
+                var response = await UserService.UpdateUserInfoAsync(new UpdateUserInfoRequest { Email = Email });
+
+                UpdateErrorMessages(response.Messages);
+                if (response.Succeed)
+                {
+                    User = response.UserInfo;
+                    ResetChanges();
+                    UpdateSuccessMessages("User information is successfully updated");
+                }
             }
-            UpdateErrorMessages(response.Messages);
+            catch (RpcException ex)
+            {
+                HandleRPCExection(ex);
+            }
         }
 
         private async Task UpdateUserPassword()
         {
-            var response = await UserService.UpdateUserPasswordAsync(new UpdateUserPasswordRequest { CurrentPassword = CurrentPassword, NewPassword = NewPassword });
+            try
+            {
 
-            if (response.Succeed)
-            {                
-                ResetChanges();
+                var response = await UserService.UpdateUserPasswordAsync(new UpdateUserPasswordRequest { CurrentPassword = CurrentPassword, NewPassword = NewPassword });
+
+                UpdateErrorMessages(response.Messages);
+                if (response.Succeed)
+                {
+                    ResetChanges();
+                    UpdateSuccessMessages("User password is successfully changed");
+                }
+                
             }
-            UpdateErrorMessages(response.Messages);
+            catch (RpcException ex)
+            {
+                HandleRPCExection(ex);
+           }
         }
     }
 }

@@ -51,6 +51,11 @@ namespace RandomCappuccino.Client
                 return new UserService.UserServiceClient(services.GetRequiredService<GrpcChannel>());
             });
 
+            builder.Services.AddScoped(services =>
+            {
+                return new GroupService.GroupServiceClient(services.GetRequiredService<GrpcChannel>());
+            });
+
             await builder.Build().RunAsync();
         }
     }

@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="GroupService.proto" />
     <None Remove="UserService.proto" />
   </ItemGroup>
 
@@ -18,6 +19,7 @@
   </ItemGroup>
 
 	<ItemGroup>
+		<Protobuf Include="GroupService.proto" />
 		<Protobuf Include="UserService.proto" />
 		<Protobuf Include="SingService.proto" />
 	</ItemGroup>

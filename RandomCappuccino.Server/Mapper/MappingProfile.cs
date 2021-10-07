@@ -24,14 +24,21 @@ namespace RandomCappuccino.Server.Mapper
             CreateMap<CreateUserDTO, User>();
             CreateMap<UpdateUserInfoDTO, User>();
 
+
+            CreateMap<GroupDTO, GroupInfo>();
+            CreateMap<CreateGroupRequest, CreateGroupDTO>();
+            CreateMap<UpdateGroupRequest, GroupDTO>();          
+                       
             CreateMap<Group, GroupDTO>();
             CreateMap<GroupDTO, Group>()
                 .ForMember(dest => dest.Id, act => act.Ignore());
+
 
             CreateMap<CreateParticipantDTO, Participant>();
             CreateMap<Participant, ParticipantDTO>();            
             CreateMap<ParticipantDTO, Participant>()
                 .ForMember(dest => dest.Id, act => act.Ignore());
+
 
             CreateMap<CreateTourDTO, Tour>();
             CreateMap<Tour, TourDTO>();

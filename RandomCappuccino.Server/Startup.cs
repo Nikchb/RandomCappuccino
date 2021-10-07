@@ -1,16 +1,8 @@
-using AutoMapper;
-using Grpc.AspNetCore.Server;
-using Grpc.Core;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 using RandomCappuccino.Server.Authentication;
 using RandomCappuccino.Server.Data;
 using RandomCappuccino.Server.Mapper;
@@ -22,10 +14,7 @@ using RandomCappuccino.Server.Services.ParticipantManager;
 using RandomCappuccino.Server.Services.SignManager;
 using RandomCappuccino.Server.Services.TourManager;
 using RandomCappuccino.Server.Services.UserManager;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace RandomCappuccino.Server
 {
@@ -87,6 +76,7 @@ namespace RandomCappuccino.Server
             {                
                 endpoints.MapGrpcService<UserServiceProvider>().EnableGrpcWeb();
                 endpoints.MapGrpcService<SignServiceProvider>().EnableGrpcWeb();
+                endpoints.MapGrpcService<GroupServiceProvider>().EnableGrpcWeb();
                 endpoints.MapFallbackToFile("index.html");
             });
         }

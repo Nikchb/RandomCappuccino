@@ -1,0 +1,64 @@
+﻿syntax = "proto3"; 
+// replace namespace with your own
+option csharp_namespace = "RandomCappuccino.Shared"; 
+package GroupService; 
+
+service GroupService { 
+	rpc GetGroups(GetGroupsRequest) returns (GroupsResponse);
+	rpc CreateGroup (CreateGroupRequest) returns (GroupResponse); 
+	rpc GetGroup(GetGroupRequest) returns (GroupResponse);
+	rpc UpdateGroup(UpdateGroupRequest) returns (GroupResponse);
+	rpc DeleteGroup(DeleteGroupRequest) returns (GroupServiceResponse);	 
+} 
+
+message GroupInfo
+{
+	string id = 1;
+	string name = 2;
+}
+
+message GetGroupsRequest
+{
+
+}
+
+message GroupsResponse
+{
+	bool succeed = 1;
+	repeated GroupInfo groups = 2;
+	repeated string messages = 3;
+}
+
+message CreateGroupRequest
+{
+	string name = 1;
+}
+
+message GetGroupRequest
+{
+	string id = 1;
+}
+
+message UpdateGroupRequest
+{
+	string id = 1;
+	string name = 2;
+}
+
+message DeleteGroupRequest
+{
+	string id = 1;
+}
+
+message GroupServiceResponse
+{
+	bool succeed = 1;	
+	repeated string messages = 3;
+}
+
+message GroupResponse
+{
+	bool succeed = 1;	
+	GroupInfo group = 2;
+	repeated string messages = 3;
+}

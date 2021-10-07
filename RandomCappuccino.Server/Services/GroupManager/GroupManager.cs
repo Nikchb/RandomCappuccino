@@ -25,6 +25,12 @@ namespace RandomCappuccino.Server.Services.GroupManager
 
         public async Task<ServiceContentResponse<GroupDTO>> CreateGroup(CreateGroupDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline<GroupDTO>(validationResponce.Messages);
+            }
+
             var user = await context.Users.FindAsync(identityManager.UserId);
             if (user == null)
             {
@@ -102,6 +108,12 @@ namespace RandomCappuccino.Server.Services.GroupManager
 
         public async Task<ServiceContentResponse<GroupDTO>> UpdateGroup(GroupDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline<GroupDTO>(validationResponce.Messages);
+            }
+
             var group = await context.Groups.FindAsync(model.Id);
             if (group == null)
             {
