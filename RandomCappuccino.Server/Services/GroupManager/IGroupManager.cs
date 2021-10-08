@@ -8,7 +8,7 @@ namespace RandomCappuccino.Server.Services.GroupManager
     {
         Task<ServiceContentResponse<GroupDTO>> CreateGroup(CreateGroupDTO model);
 
-        Task<ServiceContentResponse<GroupDTO>> UpdateGroup(GroupDTO model);
+        Task<ServiceResponse> UpdateGroup(GroupDTO model);
 
         Task<ServiceContentResponse<IEnumerable<GroupDTO>>> GetGroups();
 

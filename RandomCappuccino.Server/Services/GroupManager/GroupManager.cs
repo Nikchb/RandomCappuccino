@@ -106,23 +106,23 @@ namespace RandomCappuccino.Server.Services.GroupManager
             return Accept(mapper.Map<GroupDTO>(group));
         }
 
-        public async Task<ServiceContentResponse<GroupDTO>> UpdateGroup(GroupDTO model)
+        public async Task<ServiceResponse> UpdateGroup(GroupDTO model)
         {
             var validationResponce = ValidateModel(model);
             if (validationResponce.Succeed == false)
             {
-                return Decline<GroupDTO>(validationResponce.Messages);
+                return Decline(validationResponce.Messages);
             }
 
             var group = await context.Groups.FindAsync(model.Id);
             if (group == null)
             {
-                return Decline<GroupDTO>("Group is not found");
+                return Decline("Group is not found");
             }
 
             if(group.UserId != identityManager.UserId)
             {
-                return Decline<GroupDTO>("Access is forbiden");
+                return Decline("Access is forbiden");
             }
             
             try
@@ -132,9 +132,9 @@ namespace RandomCappuccino.Server.Services.GroupManager
             }
             catch
             {
-                return Decline<GroupDTO>("Group update is failed");
+                return Decline("Group update is failed");
             }
-            return Accept(mapper.Map<GroupDTO>(group));
+            return Accept();
         }
     }
 }
