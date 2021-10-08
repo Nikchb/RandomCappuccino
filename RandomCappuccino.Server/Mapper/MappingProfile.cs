@@ -33,6 +33,9 @@ namespace RandomCappuccino.Server.Mapper
             CreateMap<GroupDTO, Group>()
                 .ForMember(dest => dest.Id, act => act.Ignore());
 
+            CreateMap<ParticipantDTO, ParticipantInfo>();
+            CreateMap<CreateParticipantRequest, CreateParticipantDTO>();
+            CreateMap<UpdateParticipantRequest, ParticipantDTO>();
 
             CreateMap<CreateParticipantDTO, Participant>();
             CreateMap<Participant, ParticipantDTO>();            

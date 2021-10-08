@@ -26,6 +26,12 @@ namespace RandomCappuccino.Server.Services.ParticipantManager
 
         public async Task<ServiceContentResponse<ParticipantDTO>> CreateParticipant(CreateParticipantDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline<ParticipantDTO>(validationResponce.Messages);
+            }
+
             var groupResponse = await groupManager.GetGroup(model.GroupId);
             if(groupResponse.Succeed == false)
             {
@@ -114,6 +120,12 @@ namespace RandomCappuccino.Server.Services.ParticipantManager
 
         public async Task<ServiceResponse> UpdateParticipant(ParticipantDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline(validationResponce.Messages);
+            }
+
             var participant = await context.Participants.FindAsync(model.Id);
             if (participant == null ? true : participant.IsActive == false)
             {

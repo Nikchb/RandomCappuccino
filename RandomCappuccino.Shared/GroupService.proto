@@ -7,7 +7,7 @@ service GroupService {
 	rpc GetGroups(GetGroupsRequest) returns (GroupsResponse);
 	rpc CreateGroup (CreateGroupRequest) returns (GroupResponse); 
 	rpc GetGroup(GetGroupRequest) returns (GroupResponse);
-	rpc UpdateGroup(UpdateGroupRequest) returns (GroupResponse);
+	rpc UpdateGroup(UpdateGroupRequest) returns (GroupServiceResponse);
 	rpc DeleteGroup(DeleteGroupRequest) returns (GroupServiceResponse);	 
 } 
 

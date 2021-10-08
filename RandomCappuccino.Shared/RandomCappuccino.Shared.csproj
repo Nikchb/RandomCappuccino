@@ -22,5 +22,6 @@
 		<Protobuf Include="GroupService.proto" />
 		<Protobuf Include="UserService.proto" />
 		<Protobuf Include="SingService.proto" />
+		<Protobuf Include="ParticipantService.proto" />
 	</ItemGroup>
 </Project>

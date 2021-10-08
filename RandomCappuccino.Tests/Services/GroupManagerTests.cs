@@ -67,8 +67,7 @@ namespace RandomCappuccino.Tests.Services
 
             var response = await groupManager.UpdateGroup(model);
 
-            Assert.IsTrue(response.Succeed);
-            Assert.AreEqual(model.Name, response.Content.Name);
+            Assert.IsTrue(response.Succeed);            
         }
 
         [Test]

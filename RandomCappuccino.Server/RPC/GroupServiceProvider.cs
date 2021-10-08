@@ -69,18 +69,14 @@ namespace RandomCappuccino.Server.RPC
             return response;
         }
 
-        public async override Task<GroupResponse> UpdateGroup(UpdateGroupRequest request, ServerCallContext context)
+        public async override Task<GroupServiceResponse> UpdateGroup(UpdateGroupRequest request, ServerCallContext context)
         {
             var managerResponse = await groupManager.UpdateGroup(mapper.Map<GroupDTO>(request));
 
-            var response = new GroupResponse();
+            var response = new GroupServiceResponse();
 
             response.Succeed = managerResponse.Succeed;
             response.Messages.AddRange(managerResponse.Messages);
-            if (managerResponse.Content != null)
-            {
-                response.Group = mapper.Map<GroupInfo>(managerResponse.Content);
-            }
 
             return response;
         }
