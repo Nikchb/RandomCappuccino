@@ -1,8 +1,7 @@
-﻿
-@if(Messages != null)
+﻿@if(MessageManager != null)
 {
 <ul class="list-group">
-    @foreach(var message in Messages)
+    @foreach(var message in MessageManager.Messages)
     {
          @if(message.Type == ViewMessageType.Success)
          {
@@ -22,6 +21,12 @@
 
 @code 
 {
-    [Parameter]
-    public List<ViewMessage> Messages { get; set; }
+    [Inject]
+    public MessageManager MessageManager { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        MessageManager.UpdateView = StateHasChanged;
+    }
 }

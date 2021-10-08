@@ -4,11 +4,10 @@
 <h3>Groups</h3>
 <hr />
 
-<div class="row" >
-    <div class="col-lg-9">
+
         <table class="table table-borderless">
             <tr>
-                <td>Group name</td>
+                <td>Name</td>
             </tr>
             <tr>
                 <td><input class="form-control" @bind=NewGroupName /></td>
@@ -16,14 +15,11 @@
             </tr>
             @foreach(var group in groups)
             {
+                string id = group.Id;
                 <tr>
                     <td><input class="form-control" @bind=group.Name readonly /></td>
-                    <td><button class="form-control btn-info">Edit group</button></td>
+                    <td><button class="form-control btn-info" @onclick="() => NavigateToGroup(id)">Edit group</button></td>
                 </tr>               
             }
         </table>
-    </div>
-    <div class="col-lg-3">
-        <MessageList Messages=messages  />
-    </div>
-</div>
+

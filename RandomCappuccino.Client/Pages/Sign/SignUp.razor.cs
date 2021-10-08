@@ -21,7 +21,7 @@ namespace RandomCappuccino.Client.Pages.Sign
                 AuthenticationService.SetToken(responce.Token);
                 NavigationManager.NavigateTo("/");
             }
-            UpdateErrorMessages(responce.Messages);
+            MessageManager.UpdateErrorMessages(responce.Messages);
         }
     }
 }

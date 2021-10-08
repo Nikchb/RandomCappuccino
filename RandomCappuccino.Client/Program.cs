@@ -19,6 +19,8 @@ namespace RandomCappuccino.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+            builder.Services.AddScoped<MessageManager>();
+
             builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddScoped(services =>
@@ -54,6 +56,11 @@ namespace RandomCappuccino.Client
             builder.Services.AddScoped(services =>
             {
                 return new GroupService.GroupServiceClient(services.GetRequiredService<GrpcChannel>());
+            });
+
+            builder.Services.AddScoped(services =>
+            {
+                return new ParticipantService.ParticipantServiceClient(services.GetRequiredService<GrpcChannel>());
             });
 
             await builder.Build().RunAsync();

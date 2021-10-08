@@ -1,0 +1,48 @@
+﻿@page "/group/{GroupId}"
+@inherits BasePage
+@using RandomCappuccino.Shared
+
+
+<h3>Group</h3>
+
+<hr />
+
+
+        <div class="row">
+            <div class="col-lg-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>Group name</td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-control" @bind=GroupName /></td>
+                        <td><button class="form-control btn-warning" @onclick=UpdateGroup>Update</button></td>
+                        <td><button class="form-control btn-danger" @onclick=DeleteGroup>Delete</button></td>
+                    </tr>
+                   
+                </table>
+            <hr />
+            <h4>Participants</h4>
+               <table class="table table-borderless">
+                    <tr>
+                        <td>Name</td>
+                    </tr>
+                    <tr>
+                        <td><input class="form-control" @bind=NewParticipantName /></td>
+                        <td><button class="form-control btn-success" @onclick=AddParticiapant >Add</button></td>
+                    </tr>
+                    @foreach(var participant in participants)
+                    {
+                        ParticipantInfo p = participant;
+                        <tr>
+                            <td><input class="form-control" @bind=(p.Name) /></td>
+                            <td><button class="form-control btn-warning" @onclick="async ()=> await UpdateParticipant(p)" >Update</button></td>
+                            <td><button class="form-control btn-danger" @onclick="async ()=> await DeleteParticipant(p.Id)" >Delete</button></td>
+                        </tr>               
+                    }
+                </table>
+            </div>
+        </div>
+
+
+

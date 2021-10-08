@@ -1,4 +1,4 @@
-﻿namespace RandomCappuccino.Client.Components
+﻿namespace RandomCappuccino.Client.Services
 {
     public class ViewMessage
     {

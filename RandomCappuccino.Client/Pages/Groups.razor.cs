@@ -28,7 +28,7 @@ namespace RandomCappuccino.Client.Pages
             {
                 var response = await GroupService.GetGroupsAsync(new GetGroupsRequest());
 
-                UpdateErrorMessages(response.Messages);
+                MessageManager.UpdateErrorMessages(response.Messages);
                 if (response.Succeed)
                 {
                     groups.AddRange(response.Groups);
@@ -46,18 +46,23 @@ namespace RandomCappuccino.Client.Pages
             {
                 var response = await GroupService.CreateGroupAsync(new CreateGroupRequest { Name = NewGroupName });
 
-                UpdateErrorMessages(response.Messages);
+                MessageManager.UpdateErrorMessages(response.Messages);
                 if (response.Succeed)
                 {
                     groups.Add(response.Group);
                     NewGroupName = "";
-                    UpdateSuccessMessages("Group is successfully created");
+                    MessageManager.UpdateSuccessMessages("Group is successfully created");
                 }
             }
             catch (RpcException ex)
             {
                 HandleRPCExection(ex);
             }
-        }               
+        }    
+        
+        private void NavigateToGroup(string id)
+        {
+            NavigationManager.NavigateTo($"/group/{id}");
+        }
     }
 }
