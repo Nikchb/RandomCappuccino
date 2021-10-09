@@ -78,6 +78,7 @@ namespace RandomCappuccino.Server
                 endpoints.MapGrpcService<SignServiceProvider>().EnableGrpcWeb();
                 endpoints.MapGrpcService<GroupServiceProvider>().EnableGrpcWeb();
                 endpoints.MapGrpcService<ParticipantServiceProvider>().EnableGrpcWeb();
+                endpoints.MapGrpcService<TourServiceProvider>().EnableGrpcWeb();
                 endpoints.MapFallbackToFile("index.html");
             });
         }

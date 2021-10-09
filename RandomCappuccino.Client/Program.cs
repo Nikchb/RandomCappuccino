@@ -63,6 +63,11 @@ namespace RandomCappuccino.Client
                 return new ParticipantService.ParticipantServiceClient(services.GetRequiredService<GrpcChannel>());
             });
 
+            builder.Services.AddScoped(services =>
+            {
+                return new TourService.TourServiceClient(services.GetRequiredService<GrpcChannel>());
+            });
+
             await builder.Build().RunAsync();
         }
     }

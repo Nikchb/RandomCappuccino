@@ -43,6 +43,11 @@ namespace RandomCappuccino.Server.Mapper
                 .ForMember(dest => dest.Id, act => act.Ignore());
 
 
+            CreateMap<CreateTourRequest, CreateTourDTO>();
+            CreateMap<TourDTO, TourInfo>();
+            CreateMap<ExtendedTourDTO, ExtendedTourInfo>();
+            CreateMap<TourPairDTO, TourPairInfo>();
+
             CreateMap<CreateTourDTO, Tour>();
             CreateMap<Tour, TourDTO>();
             CreateMap<Tour, ExtendedTourDTO>();

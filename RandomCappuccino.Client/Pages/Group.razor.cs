@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static RandomCappuccino.Shared.GroupService;
 using static RandomCappuccino.Shared.ParticipantService;
-
+using static RandomCappuccino.Shared.TourService;
 
 namespace RandomCappuccino.Client.Pages
 {
@@ -18,20 +18,26 @@ namespace RandomCappuccino.Client.Pages
         [Inject]
         public ParticipantServiceClient ParticipantService { get; set; }
 
+        [Inject]
+        public TourServiceClient TourService { get; set; }
+
         [Parameter]
         public string GroupId { get; set; }
 
         private readonly List<ParticipantInfo> participants;
 
-        private string NewParticipantName { get; set; } = "";
+        private readonly List<TourInfo> tours;
+
+        private string NewParticipantName { get; set; } = "";       
 
         private string GroupName { get; set; } = "";
 
-        private GroupInfo GroupInfo { get; set; }
+        private GroupInfo GroupInfo { get; set; }        
 
         public Group()
         {
             participants = new List<ParticipantInfo>();
+            tours = new List<TourInfo>();
         }
 
         private void ResetChanges()
@@ -62,6 +68,21 @@ namespace RandomCappuccino.Client.Pages
 
             try
             {
+                var response = await TourService.GetToursAsync(new GetToursRequest { GroupId = GroupId });
+
+                MessageManager.AddErrorMessages(response.Messages);
+                if (response.Succeed)
+                {
+                    tours.AddRange(response.Tours);
+                }
+            }
+            catch (RpcException ex)
+            {
+                HandleRPCExection(ex);
+            }
+
+            try
+            {
                 var response = await ParticipantService.GetParticipantsAsync(new GetParticipantsRequest { GroupId = GroupId });
 
                 MessageManager.AddErrorMessages(response.Messages);
@@ -74,6 +95,7 @@ namespace RandomCappuccino.Client.Pages
             {
                 HandleRPCExection(ex);
             }
+
         }
 
         private async Task UpdateGroup()
@@ -176,6 +198,25 @@ namespace RandomCappuccino.Client.Pages
                 {
                     participants.RemoveAll(v => v.Id == id);
                     MessageManager.UpdateSuccessMessages("Participant is successfully removed");
+                }
+            }
+            catch (RpcException ex)
+            {
+                HandleRPCExection(ex);
+            }
+        }
+
+        private async Task AddTour()
+        {
+            try
+            {
+                var response = await TourService.CreateTourAsync(new CreateTourRequest { GroupId = GroupId });
+
+                MessageManager.UpdateErrorMessages(response.Messages);
+                if (response.Succeed)
+                {
+                    tours.Insert(0, new TourInfo { Id = response.Tour.Id, CreationTime = response.Tour.CreationTime });
+                    MessageManager.UpdateSuccessMessages("A new tour is successfully created");
                 }
             }
             catch (RpcException ex)

@@ -1,0 +1,69 @@
+﻿syntax = "proto3"; 
+// replace namespace with your own
+option csharp_namespace = "RandomCappuccino.Shared"; 
+package TourService; 
+
+service TourService { 
+	rpc GetTours(GetToursRequest) returns (ToursResponse);
+	rpc CreateTour(CreateTourRequest) returns (TourResponse);
+	rpc GetTour(GetTourRequest) returns (TourResponse);
+	rpc DeleteTour(DeleteTourRequest) returns (TourServiceResponse);	 
+} 
+
+message TourPairInfo
+{
+	string Participant1 = 1;
+	string Participant2 = 2;
+}
+
+message TourInfo
+{
+	string id = 1;
+	string creationTime = 2; 
+}
+
+message ExtendedTourInfo
+{
+	string id = 1;
+	string creationTime = 2; 
+	repeated TourPairInfo pairs = 3;
+}
+
+message GetToursRequest
+{
+	string groupId = 1;
+}
+
+message ToursResponse
+{
+	bool succeed = 1;
+	repeated TourInfo tours = 2;
+	repeated string messages = 3;
+}
+
+message CreateTourRequest
+{
+	string groupId = 1;
+}
+
+message GetTourRequest
+{
+	string id = 1;
+}
+
+message DeleteTourRequest
+{
+	string id = 1;
+}
+message TourServiceResponse
+{
+	bool succeed = 1;	
+	repeated string messages = 3;
+}
+
+message TourResponse
+{
+	bool succeed = 1;	
+	ExtendedTourInfo tour = 2;
+	repeated string messages = 3;
+}

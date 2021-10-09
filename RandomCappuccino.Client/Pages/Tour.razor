@@ -1,0 +1,27 @@
+﻿@page "/tour/{GroupId}/{TourId}"
+@inherits BasePage
+
+@if(TourInfo != null && GroupInfo != null)
+{
+    <h3>Tour from @TourInfo.CreationTime in @GroupInfo.Name group</h3>
+
+    <table class="table table-borderless" >
+        <tr>
+            <td>Participant 1</td>
+            <td>Participant 2</td>
+        </tr>
+        @foreach(var pair in TourInfo.Pairs.OrderBy(v=>v.Participant1))
+        {
+            <tr>
+                <td>@pair.Participant1</td>
+                <td>@pair.Participant2</td>
+            </tr>
+        }
+        <tr>
+            <td><button @onclick=NavigateBackToGroup class="form-control btn-info">Back</button></td>
+            <td><button @onclick=DeleteTour class="form-control btn-danger">Delete</button></td>
+        </tr>
+    </table>
+}
+
+

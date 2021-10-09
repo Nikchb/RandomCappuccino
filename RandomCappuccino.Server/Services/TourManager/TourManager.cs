@@ -47,6 +47,12 @@ namespace RandomCappuccino.Server.Services.TourManager
 
         public async Task<ServiceContentResponse<ExtendedTourDTO>> CreateTour(CreateTourDTO model)
         {
+            var validationResponce = ValidateModel(model);
+            if (validationResponce.Succeed == false)
+            {
+                return Decline<ExtendedTourDTO>(validationResponce.Messages);
+            }
+
             const int toursNumber = 10;
 
             var groupResponse = await groupManager.GetGroup(model.GroupId);
@@ -170,7 +176,7 @@ namespace RandomCappuccino.Server.Services.TourManager
 
             try
             {
-                tours = await context.Tours.Where(v => v.GroupId == groupId).Select(v => mapper.Map<TourDTO>(v)).ToArrayAsync();
+                tours = await context.Tours.Where(v => v.GroupId == groupId).OrderByDescending(v=>v.CreationTime).Select(v => mapper.Map<TourDTO>(v)).ToArrayAsync();
             }
             catch
             {

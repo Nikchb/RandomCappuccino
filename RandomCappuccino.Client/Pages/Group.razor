@@ -21,9 +21,9 @@
                     </tr>
                    
                 </table>
-            <hr />
-            <h4>Participants</h4>
-               <table class="table table-borderless">
+                <hr />
+                <h4>Participants</h4>
+                <table class="table table-borderless">
                     <tr>
                         <td>Name</td>
                     </tr>
@@ -42,6 +42,19 @@
                     }
                 </table>
             </div>
+            <div class="col-lg-6">
+                <h4>Tours</h4>
+                <button class="form-control btn-success" @onclick=AddTour >Create new tour</button>            
+                <table class="table table-borderless">                                    
+                    @foreach(var tour in tours)
+                    {
+                        <tr>
+                            @{ string link = $"/tour/{GroupId}/{tour.Id}"; }
+                            <td><NavLink class="nav-link" href="@link">Tour from @tour.CreationTime</NavLink></td>
+                        </tr>      
+                    }
+                </table>
+           </div>
         </div>
 
 
