@@ -40,8 +40,9 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    public void Update()
+    protected override void OnParametersSet()
     {
-        StateHasChanged();
-    }
+        base.OnParametersSet();
+        authenticationService.AuthenticationStateChanged += StateHasChanged;
+    }    
 }

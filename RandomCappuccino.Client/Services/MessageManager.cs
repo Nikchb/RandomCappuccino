@@ -9,18 +9,12 @@ namespace RandomCappuccino.Client.Services
 
         public MessageManager()
         {
-            messages = new List<ViewMessage>();
-            UpdateView = DefaultUpdateView;
+            messages = new List<ViewMessage>();            
         }
 
-        private void DefaultUpdateView()
-        {
+        public delegate void MessageListHandler();
 
-        }
-
-        public delegate void UpdateViewDelegate();
-
-        public UpdateViewDelegate UpdateView { get; set; }
+        public event MessageListHandler MessageListChanged;
 
         public IReadOnlyCollection<ViewMessage> Messages => messages.AsReadOnly();
 
@@ -32,7 +26,10 @@ namespace RandomCappuccino.Client.Services
         public void AddErrorMessages(IEnumerable<string> messages)
         {
             this.messages.AddRange(messages.Select(v => new ViewMessage { Message = v, Type = ViewMessageType.Error }));
-            UpdateView();
+            if(MessageListChanged != null)
+            {
+                MessageListChanged.Invoke();
+            }            
         }
 
         public void UpdateErrorMessages(params string[] messages)
@@ -54,7 +51,10 @@ namespace RandomCappuccino.Client.Services
         public void AddMessages(IEnumerable<string> messages)
         {
             this.messages.AddRange(messages.Select(v => new ViewMessage { Message = v, Type = ViewMessageType.Message }));
-            UpdateView();
+            if (MessageListChanged != null)
+            {
+                MessageListChanged.Invoke();
+            }
         }
 
         public void UpdateMessages(params string[] messages)
@@ -76,7 +76,10 @@ namespace RandomCappuccino.Client.Services
         public void AddSuccessMessages(IEnumerable<string> messages)
         {
             this.messages.AddRange(messages.Select(v => new ViewMessage { Message = v, Type = ViewMessageType.Success }));
-            UpdateView();
+            if (MessageListChanged != null)
+            {
+                MessageListChanged.Invoke();
+            }
         }
 
         public void UpdateSuccessMessages(params string[] messages)

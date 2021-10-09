@@ -27,6 +27,6 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        MessageManager.UpdateView = StateHasChanged;
+        MessageManager.MessageListChanged += StateHasChanged;
     }
 }

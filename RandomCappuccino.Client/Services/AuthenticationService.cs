@@ -6,6 +6,10 @@ namespace RandomCappuccino.Client.Services
 {
     public class AuthenticationService
     {
+        public delegate void AuthenticationStateHandler();
+
+        public event AuthenticationStateHandler AuthenticationStateChanged;
+
         private readonly ISyncLocalStorageService localStorage;
 
         private readonly HttpClient httpClient;
@@ -14,10 +18,10 @@ namespace RandomCappuccino.Client.Services
         {
             this.localStorage = localStorage;
             this.httpClient = httpClient;
-            InitializeAuthenticationStatus();
+            InitializeAuthenticationState();
         }
 
-        private void InitializeAuthenticationStatus()
+        private void InitializeAuthenticationState()
         {
             IsAuthenticated = false;
             httpClient.DefaultRequestHeaders.Remove("Authorization");
@@ -28,6 +32,10 @@ namespace RandomCappuccino.Client.Services
                 IsAuthenticated = true;
                 httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
             }
+            if (AuthenticationStateChanged != null)
+            {
+                AuthenticationStateChanged.Invoke();
+            }
         }
 
         public bool IsAuthenticated { get; private set; } = false;        
@@ -35,13 +43,13 @@ namespace RandomCappuccino.Client.Services
         public void SetToken(string token)
         {                      
             localStorage.SetItemAsString("token", token);
-            InitializeAuthenticationStatus();
+            InitializeAuthenticationState();
         }
 
         public void RemoveToken()
         {            
             localStorage.RemoveItem("token");
-            InitializeAuthenticationStatus();
+            InitializeAuthenticationState();
         }
     }
 }
