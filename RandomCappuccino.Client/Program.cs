@@ -5,10 +5,10 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Grpc.Net.Client;
 using Grpc.Net.Client.Web;
-using Microsoft.AspNetCore.Components;
 using RandomCappuccino.Shared;
 using Blazored.LocalStorage;
 using RandomCappuccino.Client.Services;
+
 
 namespace RandomCappuccino.Client
 {
@@ -21,7 +21,7 @@ namespace RandomCappuccino.Client
 
             builder.Services.AddScoped<MessageManager>();
 
-            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddBlazoredLocalStorage();           
 
             builder.Services.AddScoped(services =>
             {

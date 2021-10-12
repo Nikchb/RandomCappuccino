@@ -11,7 +11,7 @@ namespace RandomCappuccino.Server.Data.Models
         public string Id {  get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        public DateTime CreationTime { get; set; } = DateTime.Now;
+        public DateTime CreationTime { get; set; } = DateTime.UtcNow + (DateTime.Now - DateTime.UtcNow);
 
         [Required]
         [ForeignKey("Group")]

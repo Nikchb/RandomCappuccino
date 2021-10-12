@@ -4,24 +4,23 @@
 @if(TourInfo != null && GroupInfo != null)
 {
     <h3>Tour from @TourInfo.CreationTime in @GroupInfo.Name group</h3>
-
-    <table class="table table-borderless" >
-        <tr>
-            <td>Participant 1</td>
-            <td>Participant 2</td>
-        </tr>
-        @foreach(var pair in TourInfo.Pairs.OrderBy(v=>v.Participant1))
-        {
-            <tr>
-                <td>@pair.Participant1</td>
-                <td>@pair.Participant2</td>
-            </tr>
-        }
-        <tr>
-            <td><button @onclick=NavigateBackToGroup class="form-control btn-info">Back</button></td>
-            <td><button @onclick=DeleteTour class="form-control btn-danger">Delete</button></td>
-        </tr>
-    </table>
+    <hr /> 
+        <button @onclick=CopyPairsToClipboard class="form-control-plaintext">
+            @foreach(var pair in TourInfo.Pairs)
+            {
+                <b class="pair-line" >@pair.Participant1 - @pair.Participant2</b>
+                <br />
+            }
+        </button>
+    <hr />
+    <div class="row">
+        <div class="col-lg-6 form-group">
+            <button @onclick=NavigateBackToGroup class="form-control btn-info">Back</button>
+        </div>        
+        <div class="col-lg-6 form-group">
+            <button @onclick=DeleteTour class="form-control btn-danger">Delete</button>
+        </div>
+    </div> 
 }
 
 

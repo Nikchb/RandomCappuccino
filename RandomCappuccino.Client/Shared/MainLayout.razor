@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthenticationService authenticationService
 
 <div class="page">
     <div class="sidebar">
@@ -7,14 +8,14 @@
 
     <div class="main">
         <div class="top-row px-4">
-            @if(AuthenticationService.IsAuthenticated == false)
+            @if(authenticationService.IsAuthenticated == false)
             {
                 <NavLink class="nav-link" href="/sign-in">Sign In</NavLink>
                 <NavLink class="nav-link" href="/sign-up">Sign Up</NavLink>
             }
             else
             {
-                <button class="nav-link" @onclick=SignOut >Sign Out</button>
+                <NavLink class="nav-link" href="/sign-out">Sign Out</NavLink>                
             }            
         </div>        
         <div class="content px-4">
