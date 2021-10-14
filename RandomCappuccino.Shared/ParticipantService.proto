@@ -1,0 +1,66 @@
+﻿syntax = "proto3"; 
+// replace namespace with your own
+option csharp_namespace = "RandomCappuccino.Shared"; 
+package ParticipantService; 
+
+service ParticipantService { 
+	rpc GetParticipants(GetParticipantsRequest) returns (ParticipantsResponse);
+	rpc CreateParticipant(CreateParticipantRequest) returns (ParticipantResponse);
+	rpc GetParticipant(GetParticipantRequest) returns (ParticipantResponse);
+	rpc UpdateParticipant(UpdateParticipantRequest) returns (ParticipantServiceResponse);
+	rpc DeleteParticipant(DeleteParticipantRequest) returns (ParticipantServiceResponse);
+	
+} 
+
+message ParticipantInfo
+{
+	string id = 1;
+	string name = 2;
+}
+
+message GetParticipantsRequest
+{
+	string groupId = 1;
+}
+
+message ParticipantsResponse
+{
+	bool succeed = 1;
+	repeated ParticipantInfo participants = 2;
+	repeated string messages = 3;
+}
+
+message CreateParticipantRequest
+{
+	string name = 1;
+	string groupId = 2;
+}
+
+message GetParticipantRequest
+{
+	string id = 1;
+}
+
+message UpdateParticipantRequest
+{
+	string id = 1;
+	string name = 2;
+}
+
+message DeleteParticipantRequest
+{
+	string id = 1;
+}
+
+message ParticipantServiceResponse
+{
+	bool succeed = 1;	
+	repeated string messages = 3;
+}
+
+message ParticipantResponse
+{
+	bool succeed = 1;	
+	ParticipantInfo participant = 2;
+	repeated string messages = 3;
+}

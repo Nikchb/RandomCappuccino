@@ -1,0 +1,38 @@
+﻿syntax = "proto3"; 
+// replace namespace with your own
+option csharp_namespace = "RandomCappuccino.Shared"; 
+package UserService; 
+
+service UserService { 
+	rpc GetUserInfo (UserInfoRequest) returns (UserInfoResponse); 
+	rpc UpdateUserInfo(UpdateUserInfoRequest) returns (UserInfoResponse);
+	rpc UpdateUserPassword(UpdateUserPasswordRequest) returns (UserServiceResponse);
+} 
+
+message UserServiceResponse { 
+	bool succeed = 1;	
+	repeated string messages = 2;
+} 
+
+message UserInfoResponse { 
+	bool succeed = 1;
+	UserInfo userInfo = 2;
+	repeated string messages = 3;
+} 
+
+message UserInfo{
+	string id = 1;
+	string email = 2;
+}
+
+message UserInfoRequest { 
+}
+
+message UpdateUserInfoRequest { 
+	string email = 1;
+}
+
+message UpdateUserPasswordRequest { 
+	string currentPassword = 1;
+	string newPassword = 2;
+}

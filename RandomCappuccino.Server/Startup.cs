@@ -1,15 +1,20 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using RandomCappuccino.Server.Authentication;
+using RandomCappuccino.Server.Data;
+using RandomCappuccino.Server.Mapper;
+using RandomCappuccino.Server.Middlewares.RPCAuthenticationHandler;
+using RandomCappuccino.Server.RPC;
+using RandomCappuccino.Server.Services.GroupManager;
+using RandomCappuccino.Server.Services.IdentityManager;
+using RandomCappuccino.Server.Services.ParticipantManager;
+using RandomCappuccino.Server.Services.SignManager;
+using RandomCappuccino.Server.Services.TourManager;
+using RandomCappuccino.Server.Services.UserManager;
+
 
 namespace RandomCappuccino.Server
 {
@@ -25,12 +30,24 @@ namespace RandomCappuccino.Server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataBaseContext();
 
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RandomCappuccino.Server", Version = "v1" });
-            });
+            services.AddAuthorization();
+            services.AddCustomAuthentication();
+
+            services.AddAutoMapper();
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<IIdentityManager, IdentityManager>();
+            services.AddScoped<ISignManager, SignManager>();
+            services.AddScoped<IUserManager, UserManager>();
+            services.AddScoped<IParticipantManager, ParticipantManager>();
+            services.AddScoped<IGroupManager, GroupManager>();
+            services.AddScoped<ITourManager, TourManager>();
+
+            services.AddScoped<RPCAuthenticationHandlerMiddleware>();
+            
+            services.AddGrpc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -38,18 +55,31 @@ namespace RandomCappuccino.Server
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RandomCappuccino.Server v1"));
+                app.UseWebAssemblyDebugging();
+                app.UseDeveloperExceptionPage();               
             }
+
+            app.UseStaticFiles();
+
+            app.UseBlazorFrameworkFiles();            
 
             app.UseRouting();
 
+            app.UseMiddleware<RPCAuthenticationHandlerMiddleware>();
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseGrpcWeb();
+
             app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
+            {                
+                endpoints.MapGrpcService<UserServiceProvider>().EnableGrpcWeb();
+                endpoints.MapGrpcService<SignServiceProvider>().EnableGrpcWeb();
+                endpoints.MapGrpcService<GroupServiceProvider>().EnableGrpcWeb();
+                endpoints.MapGrpcService<ParticipantServiceProvider>().EnableGrpcWeb();
+                endpoints.MapGrpcService<TourServiceProvider>().EnableGrpcWeb();
+                endpoints.MapFallbackToFile("index.html");
             });
         }
     }

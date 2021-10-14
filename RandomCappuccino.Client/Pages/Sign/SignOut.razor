@@ -1,0 +1,13 @@
+﻿@page "/sign-out"
+@inherits BasePage
+
+@code
+{
+    protected async override Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        AuthenticationService.RemoveToken();
+        NavigationManager.NavigateTo("/sign-in");
+    }
+}
+

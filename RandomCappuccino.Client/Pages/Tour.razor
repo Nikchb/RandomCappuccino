@@ -1,0 +1,26 @@
+﻿@page "/tour/{GroupId}/{TourId}"
+@inherits BasePage
+
+@if(TourInfo != null && GroupInfo != null)
+{
+    <h3>Tour from @TourInfo.CreationTime in @GroupInfo.Name group</h3>
+    <hr /> 
+        <button @onclick=CopyPairsToClipboard class="form-control-plaintext">
+            @foreach(var pair in TourInfo.Pairs)
+            {
+                <b class="pair-line" >@pair.Participant1 - @pair.Participant2</b>
+                <br />
+            }
+        </button>
+    <hr />
+    <div class="row">
+        <div class="col-lg-6 form-group">
+            <button @onclick=NavigateBackToGroup class="form-control btn-info">Back</button>
+        </div>        
+        <div class="col-lg-6 form-group">
+            <button @onclick=DeleteTour class="form-control btn-danger">Delete</button>
+        </div>
+    </div> 
+}
+
+
