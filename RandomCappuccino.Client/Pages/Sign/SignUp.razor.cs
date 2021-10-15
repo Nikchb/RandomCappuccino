@@ -13,13 +13,21 @@ namespace RandomCappuccino.Client.Pages.Sign
         private string Email { get; set; } = "";
         private string Password { get; set; } = "";
 
+        protected override void OnParametersSet()
+        {
+            if (AuthenticationService.IsAuthenticated)
+            {
+                NavigationManager.NavigateTo("/account");
+            }
+        }
+
         private async Task SignUpAsync()
         {                     
-            var responce = await SignService.SignUpAsync(new SignRequest { Email = Email, Password = Password });
+            var responce = await SignService.SignUpAsync(new SignRequest { Email = Email, Password = AppFunctions.HashPassword(Password) });
             if (responce.Succeed)
             {
                 AuthenticationService.SetToken(responce.Token);
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/account");
             }
             MessageManager.UpdateErrorMessages(responce.Messages);
         }

@@ -14,7 +14,7 @@ using RandomCappuccino.Server.Services.ParticipantManager;
 using RandomCappuccino.Server.Services.SignManager;
 using RandomCappuccino.Server.Services.TourManager;
 using RandomCappuccino.Server.Services.UserManager;
-
+using System;
 
 namespace RandomCappuccino.Server
 {
@@ -57,6 +57,13 @@ namespace RandomCappuccino.Server
             {
                 app.UseWebAssemblyDebugging();
                 app.UseDeveloperExceptionPage();               
+            }
+            else
+            {
+                if(Environment.GetEnvironmentVariable("AUTH_KEY") == null)
+                {
+                    throw new ArgumentNullException("AUTH_KEY is not defined");
+                }
             }
 
             app.UseStaticFiles();

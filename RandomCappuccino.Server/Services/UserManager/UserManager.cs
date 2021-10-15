@@ -4,6 +4,7 @@ using RandomCappuccino.Server.Data;
 using RandomCappuccino.Server.Data.Models;
 using RandomCappuccino.Server.Services.IdentityManager;
 using RandomCappuccino.Server.Services.UserManager.DTOs;
+using RandomCappuccino.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;

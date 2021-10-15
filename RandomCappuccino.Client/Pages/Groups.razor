@@ -2,24 +2,26 @@
 @inherits BasePage
 
 <h3>Groups</h3>
+
 <hr />
 
+<div class="row">      
+    <div class="col-sm-8 mb-3">
+        <input @bind=NewGroupName type="text" class="form-control" placeholder="New group name"  />
+    </div> 
+    <div class="col-sm-4 mb-3">
+        <button class="btn-success form-control" @onclick=AddGroup>Create group</button>
+    </div>
+</div>
 
-        <table class="table table-borderless">
-            <tr>
-                <td>Name</td>
-            </tr>
-            <tr>
-                <td><input class="form-control" @bind=NewGroupName /></td>
-                <td><button class="form-control btn-success" @onclick=AddGroup>Add group</button></td>
-            </tr>
-            @foreach(var group in groups)
-            {
-                string id = group.Id;
-                <tr>
-                    <td><input class="form-control" @bind=group.Name readonly /></td>
-                    <td><button class="form-control btn-info" @onclick="() => NavigateToGroup(id)">Edit group</button></td>
-                </tr>               
-            }
-        </table>
+<hr />
+
+@foreach(var group in groups)
+{
+    string id = group.Id;
+    <div class="input-group mb-3">
+        <input @bind=group.Name type="text" class="form-control"  readonly />
+        <button class="btn btn-warning"  @onclick="() => NavigateToGroup(id)">Edit group</button>
+    </div>            
+}
 
