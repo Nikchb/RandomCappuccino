@@ -7,55 +7,57 @@
 
 <hr />
 
+<div class="row">
+    <div class="col-sm-6 mb-3">
+        <input @bind=GroupName type="text" class="form-control" placeholder="Group name"  />
+    </div> 
+    <div class="col-sm-3 mb-3">
+        <button class="btn-warning form-control" @onclick=UpdateGroup>Update group</button>
+    </div>
+    <div class="col-sm-3 mb-3">
+        <button class="btn-danger form-control" @onclick=DeleteGroup>Delete group</button>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-lg-8">
+        <h4>Participants</h4>
+        <hr />
         <div class="row">
-            <div class="col-lg-6">
-                <table class="table table-borderless">
-                    <tr>
-                        <td>Group name</td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-control" @bind=GroupName /></td>
-                        <td><button class="form-control btn-warning" @onclick=UpdateGroup>Update</button></td>
-                        <td><button class="form-control btn-danger" @onclick=DeleteGroup>Delete</button></td>
-                    </tr>
-                   
-                </table>
-                <hr />
-                <h4>Participants</h4>
-                <table class="table table-borderless">
-                    <tr>
-                        <td>Name</td>
-                    </tr>
-                    <tr>
-                        <td><input class="form-control" @bind=NewParticipantName /></td>
-                        <td><button class="form-control btn-success" @onclick=AddParticiapant >Add</button></td>
-                    </tr>
-                    @foreach(var participant in participants)
-                    {
-                        ParticipantInfo p = participant;
-                        <tr>
-                            <td><input class="form-control" @bind=(p.Name) /></td>
-                            <td><button class="form-control btn-warning" @onclick="async ()=> await UpdateParticipant(p)" >Update</button></td>
-                            <td><button class="form-control btn-danger" @onclick="async ()=> await DeleteParticipant(p.Id)" >Delete</button></td>
-                        </tr>               
-                    }
-                </table>
+            <div class="col-sm-8 mb-3">
+                <input @bind=NewParticipantName type="text" class="form-control" placeholder="New participant name"  />
+            </div> 
+            <div class="col-sm-4 mb-3">
+                <button class="btn-success form-control" @onclick=AddParticiapant>Add participant</button>
             </div>
-            <div class="col-lg-6">
-                <h4>Tours</h4>
-                <button class="form-control btn-success" @onclick=AddTour >Create new tour</button>            
-                <table class="table table-borderless">                                    
-                    @foreach(var tour in tours)
-                    {
-                        <tr>
-                            @{ string link = $"/tour/{GroupId}/{tour.Id}"; }
-                            <td><NavLink class="nav-link" href="@link">Tour from @tour.CreationTime</NavLink></td>
-                        </tr>      
-                    }
-                </table>
-           </div>
-        </div>
+        </div>        
+        @foreach(var participant in participants)
+        {
+            ParticipantInfo p = participant;
+            <div class="input-group mb-3">
+                <input @bind=p.Name type="text" class="form-control"  />
+                <button class="btn btn-warning" @onclick="async ()=> await UpdateParticipant(p)">Update</button>
+                <button class="btn btn-danger" @onclick="async ()=> await DeleteParticipant(p.Id)">Delete</button>                
+            </div>
+        }
+    </div>   
+    <div class="col-lg-4">
+        <h4>Tours</h4>
+        <hr />
+        <div class="row">
+            <div class="mb-3 col-sm-12">
+                <button class="btn-success form-control" @onclick=AddTour>Create tour</button>
+            </div>
+        </div>        
+        @foreach(var tour in tours)
+        {            
+            string link = $"/tour/{GroupId}/{tour.Id}"; 
+            <div class="mb-3 col-sm-12">
+                <NavLink class="nav-link" href="@link">Tour from @tour.CreationTime</NavLink>     
+            </div>
+        }
+    </div>
+</div>
 
 
 

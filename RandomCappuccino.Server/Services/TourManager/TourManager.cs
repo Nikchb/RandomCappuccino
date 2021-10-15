@@ -33,6 +33,11 @@ namespace RandomCappuccino.Server.Services.TourManager
         private ServiceResponse ComputeAllPairs(string groupId)
         {
             groupParticipants = context.Participants.Where(v => v.GroupId == groupId && v.IsActive).AsEnumerable().OrderBy(v => Guid.NewGuid()).ToArray();
+            if(groupParticipants.Length < 2)
+            {
+                return Decline("Group should contain at least 2 members");
+            }           
+            
             allPairs = new HashSet<Pair>();
 
             for(int i=0; i< groupParticipants.Length - 1; i++)
@@ -60,6 +65,8 @@ namespace RandomCappuccino.Server.Services.TourManager
             {
                 return Decline<ExtendedTourDTO>(groupResponse.Messages);
             }
+
+            
 
             var tours = await context.Tours.Where(v => v.GroupId == model.GroupId)
                                             .OrderByDescending(v => v.CreationTime)
