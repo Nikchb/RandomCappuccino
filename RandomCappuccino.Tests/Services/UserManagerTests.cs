@@ -5,6 +5,7 @@ using RandomCappuccino.Server.Services;
 using RandomCappuccino.Server.Services.IdentityManager;
 using RandomCappuccino.Server.Services.UserManager;
 using RandomCappuccino.Server.Services.UserManager.DTOs;
+using RandomCappuccino.Shared;
 using RandomCappuccino.Tests.InterfaceImplementations;
 using System;
 using System.Collections.Generic;
